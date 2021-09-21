@@ -78,7 +78,7 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	// Set Filter when you "magnify" the texture (get close)
 	// Load & Create Textures
 	//int width = 300, height = 300;
-	//unsigned char* texData = stbi_load("res/images/images1.jpg", &width, &height);
+	//unsigned char* texData = stbi_load("res/images/image1.jpg", &width, &height);
 
 	/*---------------------- Setting up the Triangle ----------------------*/
 
