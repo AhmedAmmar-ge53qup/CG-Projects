@@ -40,10 +40,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\images\Brick.jpg">
+    <Image Include="res\images\brick2.png">
       <Filter>Resource Files\Images</Filter>
     </Image>
-    <Image Include="res\images\Stone.jpg">
+    <Image Include="res\images\brick1.jpg">
+      <Filter>Resource Files\Images</Filter>
+    </Image>
+    <Image Include="res\images\stone.jpg">
       <Filter>Resource Files\Images</Filter>
     </Image>
   </ItemGroup>

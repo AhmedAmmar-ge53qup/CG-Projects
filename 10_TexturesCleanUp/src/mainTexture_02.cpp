@@ -82,7 +82,7 @@ int main()
 
 	// Load Textures
 	int width, height, nrOfComponents;
-	const char* imageDir = "res/images/Brick.jpg";
+	const char* imageDir = "res/images/stone.jpg";
 	unsigned char* texelData = stbi_load(imageDir, &width, &height, &nrOfComponents, 0);
 	if (!texelData)
 		std::cerr << "Failed to Load Image File: " << imageDir << std::endl;
