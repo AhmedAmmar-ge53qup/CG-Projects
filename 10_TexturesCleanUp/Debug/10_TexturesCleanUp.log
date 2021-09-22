@@ -1,6 +1,5 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
   mainTexture_02.cpp
-D:\Courses-lectures\Courses_Only\Semester 7\Computer Graphics\Projects\10_TexturesCleanUp\src\mainTexture_02.cpp(96,10): warning C4553: '==': result of expression not used; did you intend '='?
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
 glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'D:\Courses-lectures\Courses_Only\Semester 7\Computer Graphics\Projects\10_TexturesCleanUp\bin\vc120.pdb'; linking object as if no debug info

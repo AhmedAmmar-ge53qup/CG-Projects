@@ -4,10 +4,9 @@
 #include "GL/glew.h"	// GLEW must be included before GLFW
 #include "GLFW/glfw3.h"
 #include "ShaderProgram.h"
+#include "Texture.h"
 
-// Image Loader
-#define STB_IMAGE_IMPLEMENTATION  // Required by the library
-#include "stb_image/stb_image.h"
+
 
 
 // Functions Prototypes
@@ -71,39 +70,20 @@ int main()
 	shaderProgram.loadShaders("res/shaders/basic.vert", "res/shaders/basic.frag");
 
 	// 4. Adding Textures !!
-	GLuint texture1;
-	glGenTextures(1, &texture1);
-	glBindTexture(GL_TEXTURE_2D, texture1);
+	Texture texture;
+	texture.bind(GL_TEXTURE0);
 	// Set Texture Parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);		// Set Wrapping Filter for s
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);		// Set Wrapping Filter for t
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);	// Set Filter when you are far from the texture
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	// Set Filter when you "magnify" the texture (get close)
 
-	// Load Textures
-	int width, height, nrOfComponents;
-	const char* imageDir = "res/images/stone.jpg";
-	unsigned char* texelData = stbi_load(imageDir, &width, &height, &nrOfComponents, 0);
-	if (!texelData)
-		std::cerr << "Failed to Load Image File: " << imageDir << std::endl;
-
-	GLenum format = 0;
-	if (nrOfComponents == 0)
-		format = GL_RED;
-	if (nrOfComponents == 3)
-		format = GL_RGB;
-	if (nrOfComponents == 4)
-		format == GL_RGBA;
-	
-	// Create Textures
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, GL_UNSIGNED_BYTE, texelData); // 2nd GL_RGB would be GL_RGBA for png files
-	//glGenerateMipmap(GL_TEXTURE_2D);
-	stbi_image_free(texelData);
+	std::string fileName = "res/images/stone.jpg";
+	texture.loadTexture(fileName, true);
 	
 	// Set the texture and renderer
 	shaderProgram.use();
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture1);
+	texture.bind(GL_TEXTURE0);
 	glUniform1i(glGetUniformLocation(shaderProgram.getProgram(), "texSampler1"), 0);
 
 
@@ -125,11 +105,9 @@ int main()
 		GLfloat time = (GLfloat)glfwGetTime();
 		GLfloat greenColor = (GLfloat)((sin(time) / 2) + 0.5);
 
-		// GLint vertColor = glGetUniformLocation(shaderProgram.getProgram(), "vertColor"); // Create Uniform Variables
-		// glUniform4f(vertColor, 0.0f, greenColor, 1.0f, 1.0f);
 		shaderProgram.setUniform("vertColor", glm::vec4(0.0, greenColor, 1.0f, 0.0f));
 
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(GLuint), GL_UNSIGNED_INT, 0);
 
 		glBindVertexArray(0);					  // Unbind VAO
 		glBindBuffer(GL_ARRAY_BUFFER, 0);		  // Unbind VBO after VAO (So it remains connected with VAO)
