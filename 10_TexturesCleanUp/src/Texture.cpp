@@ -10,7 +10,9 @@ Texture::~Texture() {
 
 bool Texture::loadTexture(string& fileName, bool generateMipMap) {
 
+	return false;
 }
-bool Texture::bind(GLuint texUnit = 0) {
+bool Texture::bind(GLuint texUnit) {
 
+	return false;
 }
