@@ -21,7 +21,7 @@ GLFWwindow* gmainWindow;
 const int gWindowWidth = 800;
 const int gWindowHeight = 600;
 bool gWireFrame = false;
-std::string texture1_filename = "res/images/brick1.jpg";
+std::string texture1_filename = "res/images/brick2.png";
 std::string texture2_filename = "res/images/mario.png";
 
 int main()
@@ -82,7 +82,6 @@ int main()
 	texture2.bind(1);	// Bind to GL_TEXTURE1
 	glUniform1i(glGetUniformLocation(shaderProgram.getProgram(), "texSampler1"), 0);	// Set the texSampler to GL_TEXTURE0
 	glUniform1i(glGetUniformLocation(shaderProgram.getProgram(), "texSampler2"), 1);	// Set the texSampler to GL_TEXTURE1
-
 
 	/*---------------------- Setting up the Triangle ----------------------*/
 
@@ -194,7 +193,6 @@ void glfw_onkey(GLFWwindow* window, int key, int scancode, int action, int mode)
 		else
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
-
 }
 
 

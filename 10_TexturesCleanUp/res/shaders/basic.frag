@@ -9,7 +9,6 @@ uniform vec4 vertColor;
 uniform sampler2D texSampler1;
 uniform sampler2D texSampler2;
 
-
 void main()
 {
 	//fragColor = vertColor;
