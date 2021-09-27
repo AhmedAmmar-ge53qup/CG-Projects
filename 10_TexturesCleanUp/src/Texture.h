@@ -12,7 +12,7 @@ public:
 	Texture();
 	~Texture();
 
-	bool loadTexture(string &fileName, bool generateMipMap);
+	bool loadTexture(string &fileName, bool generateMipMap = true);
 	bool bind(GLuint texUnit = 0);
 
 private:
@@ -20,5 +20,5 @@ private:
 
 };
 
-#endif TEXTURE_H
+#endif //	TEXTURE_H
 

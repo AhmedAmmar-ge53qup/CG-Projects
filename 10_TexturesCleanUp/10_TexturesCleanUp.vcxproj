@@ -30,6 +30,7 @@
   <ItemGroup>
     <Image Include="res\images\brick1.jpg" />
     <Image Include="res\images\brick2.png" />
+    <Image Include="res\images\mario.png" />
     <Image Include="res\images\stone.jpg" />
   </ItemGroup>
   <ItemGroup>

@@ -21,7 +21,8 @@ GLFWwindow* gmainWindow;
 const int gWindowWidth = 800;
 const int gWindowHeight = 600;
 bool gWireFrame = false;
-
+std::string texture1_filename = "res/images/brick1.jpg";
+std::string texture2_filename = "res/images/mario.png";
 
 int main()
 {
@@ -70,21 +71,17 @@ int main()
 	shaderProgram.loadShaders("res/shaders/basic.vert", "res/shaders/basic.frag");
 
 	// 4. Adding Textures !!
-	Texture texture;
-	texture.bind(GL_TEXTURE0);
-	// Set Texture Parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);		// Set Wrapping Filter for s
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);		// Set Wrapping Filter for t
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);	// Set Filter when you are far from the texture
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	// Set Filter when you "magnify" the texture (get close)
+	Texture texture1;
+	texture1.loadTexture(texture1_filename, true);
 
-	std::string fileName = "res/images/stone.jpg";
-	texture.loadTexture(fileName, true);
+	Texture texture2;
+	texture2.loadTexture(texture2_filename, true);
 	
-	// Set the texture and renderer
 	shaderProgram.use();
-	texture.bind(GL_TEXTURE0);
-	glUniform1i(glGetUniformLocation(shaderProgram.getProgram(), "texSampler1"), 0);
+	texture1.bind(0);	// Bind to GL_TEXTURE0
+	texture2.bind(1);	// Bind to GL_TEXTURE1
+	glUniform1i(glGetUniformLocation(shaderProgram.getProgram(), "texSampler1"), 0);	// Set the texSampler to GL_TEXTURE0
+	glUniform1i(glGetUniformLocation(shaderProgram.getProgram(), "texSampler2"), 1);	// Set the texSampler to GL_TEXTURE1
 
 
 	/*---------------------- Setting up the Triangle ----------------------*/
@@ -101,10 +98,11 @@ int main()
 		shaderProgram.use();						// Use Shader Program
 		glBindVertexArray(VAO);						// Bind Vertex Array
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);	// Bind Index Buffer (Now its connected to the VAO)
+		texture1.bind(0);							// Bind TEXTURE0
+		texture2.bind(1);							// Bind TEXTURE1
 
 		GLfloat time = (GLfloat)glfwGetTime();
 		GLfloat greenColor = (GLfloat)((sin(time) / 2) + 0.5);
-
 		shaderProgram.setUniform("vertColor", glm::vec4(0.0, greenColor, 1.0f, 0.0f));
 
 		glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(GLuint), GL_UNSIGNED_INT, 0);

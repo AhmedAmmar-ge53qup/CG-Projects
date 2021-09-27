@@ -7,7 +7,7 @@ out vec2 TexCoord;
 void main()
 {
 	gl_Position = vec4(pos.x, pos.y, pos.z, 1.0);
-	TexCoord = texCoord;
+	//TexCoord = texCoord;
 
 	// method 1 to flip texture
 	TexCoord = vec2(texCoord.x, 1.0 - texCoord.y);
