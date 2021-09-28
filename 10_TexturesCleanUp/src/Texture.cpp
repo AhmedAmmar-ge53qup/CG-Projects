@@ -39,7 +39,7 @@ bool Texture::loadTexture(string& fileName, bool generateMipMap)
 		format = GL_RGBA;
 
 	// Create Textures
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, GL_UNSIGNED_BYTE, texelData); // 2nd GL_RGB would be GL_RGBA for png files
+	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, texelData); // 2nd GL_RGB would be GL_RGBA for png files
 	if(generateMipMap)
 		glGenerateMipmap(GL_TEXTURE_2D);
 

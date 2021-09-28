@@ -171,6 +171,9 @@ bool initOpenGL() {
 	// Handle Resizing the Window
 	glfwSetFramebufferSizeCallback(gmainWindow, glfw_onFramebufferSize);
 
+	// Enable Blending
+	glEnable(GL_BLEND);
+
 	// Clear the colorBuffer to the following values
 	glClearColor(0.2f, 0.4f, 0.6f, 1.0f); // Set the background color (state machine function)
 
