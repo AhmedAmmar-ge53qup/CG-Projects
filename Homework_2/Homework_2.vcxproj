@@ -30,8 +30,11 @@
   <ItemGroup>
     <Image Include="res\images\brick1.jpg" />
     <Image Include="res\images\brick2.png" />
+    <Image Include="res\images\cherrybomb.png" />
     <Image Include="res\images\mario.png" />
+    <Image Include="res\images\plant.png" />
     <Image Include="res\images\stone.jpg" />
+    <Image Include="res\images\zombie.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\basic.frag" />

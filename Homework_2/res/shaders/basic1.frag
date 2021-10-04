@@ -16,6 +16,6 @@ void main()
 	//fragColor = mix(texture(texSampler1, TexCoord), texture(texSampler2, TexCoord), 0.4);
 
 	vec4 backgroundTexColor = texture(texSampler2, TexCoord);
-	vec4 marioTexColor = texture(texSampler3, TexCoord);
-	fragColor2 = mix(backgroundTexColor.rgb, marioTexColor.rgb, marioTexColor.a);
+	vec4 foreGroundTexColor = texture(texSampler3, vec2(TexCoord.x, TexCoord.y));
+	fragColor2 = mix(backgroundTexColor.rgb, foreGroundTexColor.rgb, foreGroundTexColor.a);
 }

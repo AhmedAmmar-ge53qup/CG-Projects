@@ -7,8 +7,6 @@
 #include "Texture.h"
 
 
-
-
 // Functions Prototypes
 void Print_OpenGL_Version_Information();
 void glfw_onkey(GLFWwindow*, int, int, int, int);
@@ -24,7 +22,6 @@ bool gWireFrame = false;
 
 int main()
 {
-
 	if (!initOpenGL()) {
 		printf("Failed to Initialize window");
 		return EXIT_FAILURE;
@@ -34,19 +31,11 @@ int main()
 
 	// 1. Setup Array of vertices for triangle
 	GLfloat vertices[] = {
-		// Position				Texture
-	   -0.95f,  0.45f,	0.0f,	0.0f, 1.0f,		// Top-Left
-	   -0.25f,  0.45f,	0.0f,	1.0f, 1.0f,		// Top-Right
-	   -0.25f, -0.45f,	0.0f,	1.0f, 0.0f,		// Bottom-Right
-	   -0.95f, -0.45f,  0.0f,	0.0f, 0.0f		// Bottom Left
-	};
-
-	GLfloat vertices2[] = {
-		// Position				Texture
-	    0.25f,  0.45f,	0.0f,	0.0f, 1.0f,		// Top-Left
-		0.95f,  0.45f,	0.0f,	1.0f, 1.0f,		// Top-Right
-		0.95f, -0.45f,	0.0f,	1.0f, 0.0f,		// Bottom-Right
-	    0.25f, -0.45f,  0.0f,	0.0f, 0.0f		// Bottom Left
+		// Position					Texture
+	   -0.45f,	 0.45f,	 0.0f,		0.0f, 1.0f,		// Top-Left
+		0.45f,   0.45f,	 0.0f,		1.0f, 1.0f,		// Top-Right
+		0.45f,  -0.45f,	 0.0f,		1.0f, 0.0f,		// Bottom-Right
+	   -0.45f,  -0.45f,  0.0f,		0.0f, 0.0f		// Bottom Left
 	};
 
 	GLuint indices[] = {
@@ -79,7 +68,7 @@ int main()
 	// 2nd Rectangle
 	glGenBuffers(1, &VBO2);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO2);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	
 	glGenVertexArrays(1, &VAO2);
 	glBindVertexArray(VAO2);
@@ -103,15 +92,15 @@ int main()
 	texture0.loadTexture(texture_filename, true);
 
 	Texture texture1;
-	texture_filename = "res/images/mario.png";
+	texture_filename = "res/images/plant.png";
 	texture1.loadTexture(texture_filename, true);
 
 	Texture texture2;
-	texture_filename = "res/images/brick1.jpg";
+	texture_filename = "res/images/stone.jpg";
 	texture2.loadTexture(texture_filename, true);
 
 	Texture texture3;
-	texture_filename = "res/images/mario.png";
+	texture_filename = "res/images/cherrybomb.png";
 	texture3.loadTexture(texture_filename, true);
 	
 	shaderProgram.use();
@@ -119,12 +108,14 @@ int main()
 	texture1.bind(1);	// Bind to GL_TEXTURE1
 	glUniform1i(glGetUniformLocation(shaderProgram.getProgram(), "texSampler0"), 0);	// Set the texSampler to GL_TEXTURE0
 	glUniform1i(glGetUniformLocation(shaderProgram.getProgram(), "texSampler1"), 1);	// Set the texSampler to GL_TEXTURE1
+	glUniform2f(glGetUniformLocation(shaderProgram.getProgram(), "transform"), -0.5f, 0.0f);
 
 	shaderProgram2.use();
 	texture2.bind(2);	// Bind to GL_TEXTURE2
 	texture3.bind(3);	// Bind to GL_TEXTURE3
-	glUniform1i(glGetUniformLocation(shaderProgram2.getProgram(), "texSampler2"), 2);	// Set the texSampler to GL_TEXTURE0
-	glUniform1i(glGetUniformLocation(shaderProgram2.getProgram(), "texSampler3"), 3);	// Set the texSampler to GL_TEXTURE1
+	glUniform1i(glGetUniformLocation(shaderProgram2.getProgram(), "texSampler2"), 2);	// Set the texSampler to GL_TEXTURE2
+	glUniform1i(glGetUniformLocation(shaderProgram2.getProgram(), "texSampler3"), 3);	// Set the texSampler to GL_TEXTURE3
+	glUniform2f(glGetUniformLocation(shaderProgram2.getProgram(), "transform"), 0.5f, 0.0f);
 
 	/*---------------------- Setting up the Triangle ----------------------*/
 
