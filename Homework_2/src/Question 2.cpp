@@ -132,12 +132,16 @@ int main()
 		glBindVertexArray(VAO);						// Bind Vertex Array
 		texture0.bind(0);							// Bind TEXTURE0
 		texture1.bind(1);							// Bind TEXTURE1
+		GLfloat time = (GLfloat)glfwGetTime();
+		GLfloat offset = (GLfloat)(sin(time) / 2);
+		shaderProgram.setUniform("transform", glm::vec2(offset, 0.0f));
 		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
 		
 		shaderProgram2.use();
 		glBindVertexArray(VAO2);
 		texture2.bind(2);
 		texture3.bind(3);
+		shaderProgram2.setUniform("transform", glm::vec2(0.0f, offset));
 		glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(GLuint), GL_UNSIGNED_INT, 0);
 
 		glBindVertexArray(0);					  // Unbind VAO

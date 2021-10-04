@@ -6,7 +6,7 @@ out vec2 TexCoord;
 uniform vec2 transform;
 void main()
 {
-	gl_Position = vec4(pos.x+transform.x, pos.y, pos.z, 1.0);
+	gl_Position = vec4(pos.x+transform.x, pos.y+transform.y, pos.z, 1.0);
 	//TexCoord = texCoord;
 
 	// method 1 to flip texture
