@@ -3,11 +3,11 @@
 #include <iostream>
 #include "GL/glew.h"	// GLEW must be included before GLFW
 #include "GLFW/glfw3.h"
+
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 #include "Texture.h"
-
-
-
 
 // Functions Prototypes
 void Print_OpenGL_Version_Information();
@@ -24,6 +24,19 @@ bool gWireFrame = false;
 std::string texture1_filename = "res/images/brick2.png";
 std::string texture2_filename = "res/images/mario.png";
 
+// Experiment with translation
+bool transDirection = true;
+float offset = 0.0f;
+float maxOffset = 0.7f;
+float increment = 0.01f;
+
+float curAngle = 0.0f;
+
+bool sizeDirection = true;
+float curSize = 0.4f;
+float maxSize = 0.8f;
+float minSize = 0.1f;
+
 int main()
 {
 
@@ -36,21 +49,59 @@ int main()
 
 	// 1. Setup Array of vertices for triangle
 	GLfloat vertices[] = {
-		// Position				Texture
-	   -0.5f,	0.5f,	0.0f,	0.0f, 1.0f,		// Top-Left
-		0.5f,   0.5f,	0.0f,	1.0f, 1.0f,		// Top-Right
-		0.5f,  -0.5f,	0.0f,	1.0f, 0.0f,		// Bottom-Right
-	   -0.5f,  -0.5f,   0.0f,	0.0f, 0.0f		// Bottom Left
-	};
+		// position		 // tex coords
 
-	GLuint indices[] = {
-		0, 1, 2,	// First Triangle
-		0, 2, 3		// Second Triangle
-	};
+	    //front face
+	   -1.0f,  1.0f,  1.0f, 0.0f, 1.0f,
+		1.0f, -1.0f,  1.0f, 1.0f, 0.0f,
+		1.0f,  1.0f,  1.0f, 1.0f, 1.0f,
+	   -1.0f,  1.0f,  1.0f, 0.0f, 1.0f,
+	   -1.0f, -1.0f,  1.0f, 0.0f, 0.0f,
+		1.0f, -1.0f,  1.0f, 1.0f, 0.0f,
 
+		 //back face
+		-1.0f,  1.0f, -1.0f, 0.0f, 1.0f,
+		 1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+		 1.0f,  1.0f, -1.0f, 1.0f, 1.0f,
+		-1.0f,  1.0f, -1.0f, 0.0f, 1.0f,
+		-1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+		 1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+
+		  //left face
+		 -1.0f,  1.0f, -1.0f, 0.0f, 1.0f,
+		 -1.0f, -1.0f,  1.0f, 1.0f, 0.0f,
+		 -1.0f,  1.0f,  1.0f, 1.0f, 1.0f,
+		 -1.0f,  1.0f, -1.0f, 0.0f, 1.0f,
+		 -1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+		 -1.0f, -1.0f,  1.0f, 1.0f, 0.0f,
+
+		  //right face
+		  1.0f,  1.0f,  1.0f, 0.0f, 1.0f,
+		  1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+		  1.0f,  1.0f, -1.0f, 1.0f, 1.0f,
+		  1.0f,  1.0f,  1.0f, 0.0f, 1.0f,
+		  1.0f, -1.0f,  1.0f, 0.0f, 0.0f,
+		  1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+
+		   //top face
+		 -1.0f,  1.0f, -1.0f, 0.0f, 1.0f,
+		  1.0f,  1.0f,  1.0f, 1.0f, 0.0f,
+		  1.0f,  1.0f, -1.0f, 1.0f, 1.0f,
+		 -1.0f,  1.0f, -1.0f, 0.0f, 1.0f,
+		 -1.0f,  1.0f,  1.0f, 0.0f, 0.0f,
+		  1.0f,  1.0f,  1.0f, 1.0f, 0.0f,
+
+		   //bottom face
+		 -1.0f, -1.0f,  1.0f, 0.0f, 1.0f,
+		  1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+		  1.0f, -1.0f,  1.0f, 1.0f, 1.0f,
+		 -1.0f, -1.0f,  1.0f, 0.0f, 1.0f,
+		 -1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+		  1.0f, -1.0f, -1.0f, 1.0f, 0.0f
+	};
 
 	// 2. Setup buffers on the GPU
-	GLuint VBO, VAO, IBO;	// IBO = Index Buffer Object (Element Buffer)
+	GLuint VBO, VAO;	// IBO = Index Buffer Object (Element Buffer)
 	glGenBuffers(1, &VBO);		// Generate Buffer
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);		// Set it as working buffer (State Machine)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -62,9 +113,6 @@ int main()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3*sizeof(GLfloat))); //Textures
 	glEnableVertexAttribArray(1);
 
-	glGenBuffers(1, &IBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// 3. Setup Shader Program
 	ShaderProgram shaderProgram;
@@ -93,25 +141,48 @@ int main()
 		glfwPollEvents(); // Get + Handle user input events
 
 		// ============= Drawing ============= //
-		glClear(GL_COLOR_BUFFER_BIT);				// Sets the colors
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);				// Sets the colors
 		shaderProgram.use();						// Use Shader Program
 		glBindVertexArray(VAO);						// Bind Vertex Array
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);	// Bind Index Buffer (Now its connected to the VAO)
 		texture1.bind(0);							// Bind TEXTURE0
 		texture2.bind(1);							// Bind TEXTURE1
 
-		GLfloat time = (GLfloat)glfwGetTime();
-		GLfloat greenColor = (GLfloat)((sin(time) / 2) + 0.5);
-		shaderProgram.setUniform("vertColor", glm::vec4(0.0, greenColor, 1.0f, 0.0f));
 
-		glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(GLuint), GL_UNSIGNED_INT, 0);
+		glm::mat4 transform = glm::mat4(1.0);
+		if (transDirection)
+			offset += increment;
+		else
+			offset -= increment;
+		if(abs(offset) >= maxOffset)
+			transDirection = !transDirection;
+
+		curAngle += 0.5f;
+		if (curAngle >= 360.0f)
+			curAngle -= 360.0f;
+
+		if (curSize >= maxSize || curSize <= minSize)
+			sizeDirection = !sizeDirection;
+
+		if (sizeDirection)
+			curSize += 0.01f;
+		else
+			curSize -= 0.01f;
+
+
+		transform = glm::translate(transform, glm::vec3(offset, 0.0f, 0.0f));
+		transform = glm::rotate(transform, glm::radians(curAngle), glm::vec3(1.0f, 1.0f, 1.0f));
+		transform = glm::scale(transform, glm::vec3(curSize, curSize, curSize));
+		shaderProgram.setUniform("transform", transform);
+		
+		
+		glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(GLuint));
 
 		glBindVertexArray(0);					  // Unbind VAO
 		glBindBuffer(GL_ARRAY_BUFFER, 0);		  // Unbind VBO after VAO (So it remains connected with VAO)
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // Unbind IBO After VAO (So it remains connected with VAO)
 		glUseProgram(0);						  // Un-use shader program
 		// ============= Drawing ============= //
 
+		glfwSwapInterval(1);
 		glfwSwapBuffers(gmainWindow); // Swap the screen buffers (the concept of double buffers)
 	}
 	/*---------------------- Rendering loop(Game Loop) ----------------------*/
@@ -119,7 +190,6 @@ int main()
 	// Delete all objects we have created
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &IBO);
 	// Delete window before ending the progrem
 	glfwDestroyWindow(gmainWindow);
 	// Terminate GLFW before ending the program
@@ -176,6 +246,8 @@ bool initOpenGL() {
 
 	// Clear the colorBuffer to the following values
 	glClearColor(0.2f, 0.4f, 0.6f, 1.0f); // Set the background color (state machine function)
+	
+	glEnable(GL_DEPTH_TEST);
 
 	// Print OpenGL Version
 	Print_OpenGL_Version_Information();
