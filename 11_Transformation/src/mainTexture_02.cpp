@@ -34,7 +34,7 @@ float curAngle = 0.0f;
 
 bool sizeDirection = true;
 float curSize = 0.4f;
-float maxSize = 0.8f;
+float maxSize = 0.6f;
 float minSize = 0.1f;
 
 int main()
@@ -164,9 +164,9 @@ int main()
 			sizeDirection = !sizeDirection;
 
 		if (sizeDirection)
-			curSize += 0.01f;
+			curSize += 0.001f;
 		else
-			curSize -= 0.01f;
+			curSize -= 0.001f;
 
 
 		transform = glm::translate(transform, glm::vec3(offset, 0.0f, 0.0f));
@@ -289,8 +289,8 @@ void Print_OpenGL_Version_Information()
 	glGetIntegerv(GL_MAJOR_VERSION, &major);
 	glGetIntegerv(GL_MINOR_VERSION, &minor);
 	printf("GL Vendor            : %s\n", vendor);
-	//printf("GL Renderer          : %s\n", renderer);
-	printf("GL Renderer          : NVIDIA GeForce RTX 3090 PCIe/SSE2\n");
+	printf("GL Renderer          : %s\n", renderer);
+	//printf("GL Renderer          : NVIDIA GeForce RTX 3090 PCIe/SSE2\n");
 	printf("GL Version (string)  : %s\n", version);
 	printf("GL Version (integer) : %d.%d\n", major, minor);
 	printf("GLSL Version         : %s\n", glslVersion);
