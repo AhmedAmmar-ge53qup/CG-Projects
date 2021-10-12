@@ -159,7 +159,7 @@
     <ClInclude Include="src\Texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\mainTexture_02.cpp" />
+    <ClCompile Include="src\mainTransform_01.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
