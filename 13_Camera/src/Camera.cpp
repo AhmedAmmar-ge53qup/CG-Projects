@@ -28,7 +28,7 @@ const glm::vec3& Camera::getUp() const {
 }
 
 
-FPSCamera::FPSCamera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), float yaw = glm::pi<float>(), float pitch = 0)
+FPSCamera::FPSCamera(glm::vec3 position, float yaw, float pitch)
 {
 	mPosition = position;
 	mYaw = yaw;
@@ -63,6 +63,22 @@ void FPSCamera::rotate(float yaw, float pitch)
 
 	updateCameraVectors();
 }
-void FPSCamera::move(const glm::vec3& offsetPos) {
-	
+void FPSCamera::move(const glm::vec3& offsetPos) 
+{
+	mPosition += offsetPos;
+	updateCameraVectors();
+}
+
+void FPSCamera::updateCameraVectors()
+{
+	glm::vec3 look;
+	look.x = cosf(mPitch) * sinf(mYaw);
+	look.y = sinf(mPitch);
+	look.z = cosf(mPitch) * cosf(mYaw);
+
+	mLook = glm::normalize(look);
+	mRight = glm::normalize(glm::cross(mLook, World_Up));
+	mUp = glm::normalize(glm::cross(mLook, mRight));
+
+	mTargetPos = mPosition + mLook;
 }
