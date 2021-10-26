@@ -77,7 +77,7 @@ void FPSCamera::updateCameraVectors()
 	look.z = cosf(mPitch) * cosf(mYaw);
 
 	mLook = glm::normalize(look);
-	mRight = glm::normalize(glm::cross(mLook, World_Up));
+	mRight = glm::normalize(glm::cross(World_Up, mLook));
 	mUp = glm::normalize(glm::cross(mLook, mRight));
 
 	mTargetPos = mPosition + mLook;

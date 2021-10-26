@@ -11,6 +11,6 @@ void main()
 	gl_Position = projection * view * model * vec4(pos.x, pos.y, pos.z, 1.0);
 	//TexCoord = texCoord;
 
-	// method 1 to flip texture
-	TexCoord = vec2(texCoord.x, 1.0 - texCoord.y);
+	// we can flip on y by negating it or (1-texCoord.y)
+	TexCoord = vec2(texCoord.x, texCoord.y);
 }

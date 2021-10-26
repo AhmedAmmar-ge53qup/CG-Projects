@@ -24,6 +24,8 @@ bool Texture::loadTexture(string& fileName, bool generateMipMap)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);	// Set Filter when you are far from the texture
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	// Set Filter when you "magnify" the texture (get close)
 
+	stbi_set_flip_vertically_on_load(1);
+
 	unsigned char* texelData = stbi_load(fileName.c_str(), &width, &height, &nrOfComponents, 0);
 	if (!texelData) {
 		std::cerr << "Failed to Load Image File: " << fileName << std::endl;

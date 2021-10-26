@@ -149,6 +149,8 @@ int main()
 
 	double lastTime = glfwGetTime();
 	float cubeAngle = 0.0f;
+	glm::vec3 cubePos(0.0f, 0.0f, 0.0f);
+	glm::vec3 floorPos(0.0f, -1.0f, 0.0f);
 	/*---------------------- Rendering loop(Game Loop) ----------------------*/
 	while (!glfwWindowShouldClose(gmainWindow))
 	{
@@ -165,29 +167,13 @@ int main()
 		glBindVertexArray(VAO);						// Bind Vertex Array
 		texture1.bind(0);							// Bind TEXTURE0
 		texture2.bind(1);							// Bind TEXTURE1
+		floorTexture.bind(0);
 
 		// Model, View, Projection MVP
 		glm::mat4 model(1.0), view(1.0), projection(1.0);
-		glm::vec3 camPos(0.0f, 0.0f, 0.0f);
-		glm::vec3 targetPos(0.0f, 0.0f, -1.0f);
-		glm::vec3 up(0.0f, 1.0f, 0.0f);
 
-		floorTexture.bind(0);
-		glm::vec3 cubePos(0.0f, 0.0f, 0.0f);
-		glm::vec3 floorPos(0.0f, -1.0f, 0.0f);
-		model = glm::translate(model, floorPos) * glm::scale(model, glm::vec3(10.0f, 0.01f, 10.0f));
-
-		// Create Model Matrix
-		/*cubeAngle += (GLfloat)(deltaTime * 50.0f);
-		if (cubeAngle >= 360.0f) 
-			cubeAngle = 0.0f;*/
-
-		/*glm::vec3 cubePos(0.0f, 0.0f, -2.0f);
-		model = glm::translate(model, cubePos) * glm::rotate(model, glm::radians(cubeAngle), glm::vec3(0.0f, 1.0f, 0.0f));*/
-
+		//model = glm::translate(model, floorPos) * glm::scale(model, glm::vec3(10.0f, 0.01f, 10.0f));
 		view = fpsCamera.getViewMatrix();
-
-		//Create Projection Matrix
 		projection = glm::perspective(glm::radians(fpsCamera.getFOV()), (GLfloat)gWindowWidth/(GLfloat)gWindowHeight, 0.1f, 100.0f);
 		
 		shaderProgram.setUniform("model", model);
@@ -311,8 +297,8 @@ void update(double elapsedTime)
 	glfwGetCursorPos(gmainWindow, &mouseX, &mouseY);	// It will return the position to the variables mouseX, mouseY
 
 	// Rotate the camera
-	fpsCamera.rotate((float)(mouseX-gWindowWidth / 2.0f) * MOUSE_SENSITIVTY,
-		(float)(mouseY-gWindowHeight / 2.0f) * MOUSE_SENSITIVTY);
+	fpsCamera.rotate((float)(gWindowWidth / 2.0f - mouseX) * MOUSE_SENSITIVTY,
+		(float)(gWindowHeight / 2.0f - mouseY) * MOUSE_SENSITIVTY);
 
 	// Return camera to center
 	glfwSetCursorPos(gmainWindow, gWindowWidth / 2, gWindowHeight / 2);
@@ -329,9 +315,9 @@ void update(double elapsedTime)
 		fpsCamera.move(MOVE_SPEED * (float)elapsedTime * -fpsCamera.getRight());
 
 	// Up and down
-	if (glfwGetKey(gmainWindow, GLFW_KEY_Z) == GLFW_PRESS)
+	if (glfwGetKey(gmainWindow, GLFW_KEY_E) == GLFW_PRESS)
 		fpsCamera.move(MOVE_SPEED * (float)elapsedTime * fpsCamera.getUp());
-	if (glfwGetKey(gmainWindow, GLFW_KEY_X) == GLFW_PRESS)
+	if (glfwGetKey(gmainWindow, GLFW_KEY_Q) == GLFW_PRESS)
 		fpsCamera.move(MOVE_SPEED * (float)elapsedTime * -fpsCamera.getUp());
 
 
