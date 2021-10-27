@@ -172,7 +172,7 @@ int main()
 		// Model, View, Projection MVP
 		glm::mat4 model(1.0), view(1.0), projection(1.0);
 
-		//model = glm::translate(model, floorPos) * glm::scale(model, glm::vec3(10.0f, 0.01f, 10.0f));
+		model = glm::translate(model, floorPos) * glm::scale(model, glm::vec3(10.0f, 0.01f, 10.0f));
 		view = fpsCamera.getViewMatrix();
 		projection = glm::perspective(glm::radians(fpsCamera.getFOV()), (GLfloat)gWindowWidth/(GLfloat)gWindowHeight, 0.1f, 100.0f);
 		
@@ -272,14 +272,14 @@ void glfw_onkey(GLFWwindow* window, int key, int scancode, int action, int mode)
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 
-	if (key == GLFW_KEY_W && action == GLFW_PRESS)
-	{
-		gWireFrame = !gWireFrame;	// Toggling
-		if (gWireFrame == true)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		else
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
+	//if (key == GLFW_KEY_W && action == GLFW_PRESS)
+	//{
+	//	gWireFrame = !gWireFrame;	// Toggling
+	//	if (gWireFrame == true)
+	//		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//	else
+	//		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//}
 }
 
 // Handle Mouse Scrolling
