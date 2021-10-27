@@ -167,21 +167,27 @@ int main()
 		glBindVertexArray(VAO);						// Bind Vertex Array
 		texture1.bind(0);							// Bind TEXTURE0
 		texture2.bind(1);							// Bind TEXTURE1
-		floorTexture.bind(0);
 
 		// Model, View, Projection MVP
 		glm::mat4 model(1.0), view(1.0), projection(1.0);
 
-		model = glm::translate(model, floorPos) * glm::scale(model, glm::vec3(10.0f, 0.01f, 10.0f));
+		// Draw the Cube
 		view = fpsCamera.getViewMatrix();
 		projection = glm::perspective(glm::radians(fpsCamera.getFOV()), (GLfloat)gWindowWidth/(GLfloat)gWindowHeight, 0.1f, 100.0f);
 		
 		shaderProgram.setUniform("model", model);
 		shaderProgram.setUniform("view", view);
 		shaderProgram.setUniform("projection", projection);
-		
-		
 		glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(GLuint));
+		glBindVertexArray(0);
+		
+		// Draw the floor
+		floorTexture.bind(0);
+		model = glm::translate(model, floorPos) * glm::scale(model, glm::vec3(10.0f, 0.01f, 10.0f));
+		shaderProgram.setUniform("model", model);
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(GLuint));
+
 
 		glBindVertexArray(0);					  // Unbind VAO
 		glBindBuffer(GL_ARRAY_BUFFER, 0);		  // Unbind VBO after VAO (So it remains connected with VAO)
@@ -272,14 +278,14 @@ void glfw_onkey(GLFWwindow* window, int key, int scancode, int action, int mode)
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 
-	//if (key == GLFW_KEY_W && action == GLFW_PRESS)
-	//{
-	//	gWireFrame = !gWireFrame;	// Toggling
-	//	if (gWireFrame == true)
-	//		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//	else
-	//		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	//}
+	if (key == GLFW_KEY_F && action == GLFW_PRESS)
+	{
+		gWireFrame = !gWireFrame;	// Toggling
+		if (gWireFrame == true)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		else
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 }
 
 // Handle Mouse Scrolling

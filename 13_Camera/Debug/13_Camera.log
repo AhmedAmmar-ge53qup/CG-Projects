@@ -1,3 +1,5 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
   Camera.cpp
+  mainCamera_01.cpp
+  Generating Code...
   13_Camera.vcxproj -> D:\Courses-lectures\Courses_Only\Semester 7\Computer Graphics\Projects\13_Camera\bin\13_Camera.exe
