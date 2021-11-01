@@ -2,4 +2,7 @@
   Camera.cpp
   mainCamera_01.cpp
   Generating Code...
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'D:\Courses-lectures\Courses_Only\Semester 7\Computer Graphics\Projects\13_Camera\bin\vc120.pdb'; linking object as if no debug info
   13_Camera.vcxproj -> D:\Courses-lectures\Courses_Only\Semester 7\Computer Graphics\Projects\13_Camera\bin\13_Camera.exe
