@@ -18,7 +18,7 @@ void glfw_onFramebufferSize(GLFWwindow*, int, int);
 bool initOpenGL();
 
 // Global Variables
-const char* APP_TITLE = "Computer Graphics - Camera";
+const char* APP_TITLE = "Computer Graphics - Object Model Loading";
 GLFWwindow* gmainWindow;
 int gWindowWidth = 800;
 int gWindowHeight = 600;

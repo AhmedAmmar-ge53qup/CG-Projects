@@ -56,3 +56,10 @@ bool Texture::bind(GLuint texUnit)
 	glBindTexture(GL_TEXTURE_2D, mTexture);
 	return true;
 }
+
+bool Texture::unbind(GLuint texUnit)
+{
+	glActiveTexture(GL_TEXTURE0 + texUnit);		// We have to activate first
+	glBindTexture(GL_TEXTURE_2D, 0);
+	return true;
+}

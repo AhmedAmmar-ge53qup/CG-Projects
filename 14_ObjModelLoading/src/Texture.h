@@ -14,6 +14,7 @@ public:
 
 	bool loadTexture(string &fileName, bool generateMipMap = true);
 	bool bind(GLuint texUnit = 0);
+	bool unbind(GLuint texUnit = 0);
 
 private:
 	GLuint mTexture;
