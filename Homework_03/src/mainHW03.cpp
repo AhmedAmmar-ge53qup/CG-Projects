@@ -174,40 +174,6 @@ int main()
 			vrOffset -= 0.75;
 			scaleRatio -= glm::vec3(0.05f, 0.05f, 0.05f);
 		}
-	
-
-		//for (int i = 1; i <= 5; i++) {
-		//	model = glm::mat4(1.0);	// Reset Model Matrix
-		//	model = glm::translate(model, glm::vec3(2.0f, 2.1f - (i * hzOffset), -5.0f)) *
-		//		glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f)) *
-		//		glm::rotate(model, glm::radians(cubeAngle + 20.0f), glm::vec3(1.0f, 1.0f, 0.0f));
-		//	shaderProgram.setUniform("model", model);
-		//	glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(GLuint));
-		//}
-		//for (int i = 1; i <= 5; i++) {
-		//	model = glm::mat4(1.0);	// Reset Model Matrix
-		//	model = glm::translate(model, glm::vec3(1.0f, 2.1f - (i * hzOffset), -5.0f)) *
-		//		glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f)) *
-		//		glm::rotate(model, glm::radians(cubeAngle + 20.0f), glm::vec3(1.0f, 1.0f, 0.0f));
-		//	shaderProgram.setUniform("model", model);
-		//	glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(GLuint));
-		//}
-		//for (int i = 1; i <= 5; i++) {
-		//	model = glm::mat4(1.0);	// Reset Model Matrix
-		//	model = glm::translate(model, glm::vec3(0.0f, 2.1f - (i * hzOffset), -5.0f)) *
-		//		glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f)) *
-		//		glm::rotate(model, glm::radians(cubeAngle + 20.0f), glm::vec3(1.0f, 1.0f, 0.0f));
-		//	shaderProgram.setUniform("model", model);
-		//	glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(GLuint));
-		//}
-		//for (int i = 1; i <= 5; i++) {
-		//	model = glm::mat4(1.0);	// Reset Model Matrix
-		//	model = glm::translate(model, glm::vec3(-1.0f, 2.1f - (i * hzOffset), -5.0f)) *
-		//		glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f)) *
-		//		glm::rotate(model, glm::radians(cubeAngle + 20.0f), glm::vec3(1.0f, 1.0f, 0.0f));
-		//	shaderProgram.setUniform("model", model);
-		//	glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(GLuint));
-		//}
 
 		glBindVertexArray(0);					  // Unbind VAO
 		glBindBuffer(GL_ARRAY_BUFFER, 0);		  // Unbind VBO after VAO (So it remains connected with VAO)
