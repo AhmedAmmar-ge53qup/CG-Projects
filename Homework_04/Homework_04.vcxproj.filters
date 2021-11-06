@@ -19,9 +19,6 @@
     <Filter Include="Resource Files\Images">
       <UniqueIdentifier>{8e2fb27b-52ba-4eed-a98c-e0910a627266}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\Models">
-      <UniqueIdentifier>{7553c604-db24-4b1d-aef6-f9b156f357a0}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Camera.cpp">
@@ -75,19 +72,5 @@
     <Image Include="res\images\stone.jpg">
       <Filter>Resource Files\Images</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="res\models\cylinder.obj">
-      <Filter>Resource Files\Models</Filter>
-    </Object>
-    <Object Include="res\models\floor.obj">
-      <Filter>Resource Files\Models</Filter>
-    </Object>
-    <Object Include="res\models\woodcrate.obj">
-      <Filter>Resource Files\Models</Filter>
-    </Object>
-    <Object Include="res\models\backpack\backpack.obj">
-      <Filter>Resource Files\Models</Filter>
-    </Object>
   </ItemGroup>
 </Project>

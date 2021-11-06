@@ -74,8 +74,29 @@ int main()
 	ShaderProgram shaderProgram, shaderProgramOneTex;
 	shaderProgram.loadShaders("res/shaders/basic.vert", "res/shaders/basic.frag");
 
-	// Importing the model
-	Model backpack("res/models/backpack/backpack.obj");
+	// Loading the models
+	const int numModels = 4;
+	Model models[numModels];
+	models[0].loadModel("res/models/cylinder.obj");
+	models[1].loadModel("res/models/woodcrate.obj");
+	models[2].loadModel("res/models/backpack/backpack.obj");
+	models[3].loadModel("res/models/floor.obj");
+
+	// Model positions
+	glm::vec3 modelPos[] = {
+		glm::vec3(-2.5f,1.4f, 0.0f),	// cylinder
+		glm::vec3(2.5f, 1.0f, 0.0f),	// crate
+		glm::vec3(0.0f, 4.0f, 0.0f),	// backpack
+		glm::vec3(0.0f, 0.0f, 0.0f)		// floor
+	};
+
+	// Model scale
+	glm::vec3 modelScale[] = {
+		glm::vec3(0.7f, 0.7f, 0.7f),	// cylinder
+		glm::vec3(1.0f, 1.0f, 1.0f),	// crate
+		glm::vec3(1.0f, 1.0f, 1.0f),	// backpack
+		glm::vec3(10.0f, 1.0f, 10.0f)	// floor
+	};
 
 	double lastTime = glfwGetTime();
 	float cubeAngle = 0.0f;
@@ -108,11 +129,15 @@ int main()
 		shaderProgram.setUniform("view", view);
 		shaderProgram.setUniform("projection", projection);
 
-		backpack.Draw(shaderProgram);
+		for (int i = 0; i < numModels; i++)
+		{
+			model = glm::translate(glm::mat4(1.0), modelPos[i]) * glm::scale(glm::mat4(1.0), modelScale[i]);
+			if (i == 2)
+				model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
+			shaderProgram.setUniform("model", model);
 
-
-		// Draw the floor
-	/*	glDrawArrays(GL_TRIANGLES, 0, 36);*/
+			models[i].Draw(shaderProgram);
+		}
 
 		glBindVertexArray(0);
 
