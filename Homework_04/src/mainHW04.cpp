@@ -45,7 +45,7 @@ float minSize = 0.1f;
 FPSCamera fpsCamera(glm::vec3(0.0f, 2.5f, 10.0f));
 
 const double ZOOM_SENSITIVITY = -3.0;
-const float MOVE_SPEED = 5.0; // units per second
+float MOVE_SPEED = 5.0; // units per second
 const float MOUSE_SENSITIVITY = 0.1f;
 
 // Function prototypes
@@ -316,6 +316,11 @@ void update(double elapsedTime)
 		fpsCamera.move(MOVE_SPEED * (float)elapsedTime * fpsCamera.getUp());
 	else if (glfwGetKey(gWindow, GLFW_KEY_Q) == GLFW_PRESS)
 		fpsCamera.move(MOVE_SPEED * (float)elapsedTime * -fpsCamera.getUp());
+
+	if (glfwGetKey(gWindow, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+		MOVE_SPEED = 10.0f;
+	else if (glfwGetKey(gWindow, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
+		MOVE_SPEED = 5.0f;
 }
 
 //-----------------------------------------------------------------------------
