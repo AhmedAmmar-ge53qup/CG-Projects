@@ -12,7 +12,6 @@
 #include "glm/gtc/matrix_transform.hpp" //added for transform
 
 #include "ShaderProgram.h"
-#include "Texture.h"
 #include "Camera.h"
 #include "Mesh.h"
 
@@ -72,31 +71,6 @@ int main()
 	//setting shaders
 	ShaderProgram shaderProgram, shaderProgramOneTex;
 	shaderProgram.loadShaders("res/shaders/basic.vert", "res/shaders/basic.frag");
-	//shaderProgramOneTex.loadShaders("res/shaders/camera.vert", "res/shaders/texture.frag");
-
-	// Load meshes and textures
-	const int numModels = 4;
-	Mesh mesh[numModels];
-	Texture texture[numModels];
-
-	mesh[0].loadOBJ("res/models/cylinder.obj");
-	//mesh[0].loadOBJ("res/models/Robot_l2.obj");
-	mesh[1].loadOBJ("res/models/woodcrate.obj");
-	mesh[2].loadOBJ("res/models/dolphinHighPoly.obj");
-	mesh[3].loadOBJ("res/models/floor.obj");
-	//mesh[3].loadOBJ("res/models/floor-pavement.obj"); //my floor
-
-	std::string filename = "res/models/cylinder.jpg";
-	texture[0].loadTexture(filename, true);
-	//texture[0].loadTexture("res/models/Robot_diffuse.jpg", true);
-	filename = "res/models/woodcrate_diffuse.jpg";
-	texture[1].loadTexture(filename, true);
-	//texture[2].loadTexture("res/images/robot_diffuse.jpg", true);
-	filename = "res/models/Dolphin_HighPolyUV.png";
-	texture[2].loadTexture(filename, true);
-	//texture[3].loadTexture("res/images/tile_floor.jpg", true);
-	filename = "res/models/Floor_ConcreteHerringbone.jpg";
-	texture[3].loadTexture(filename, true); //my floor
 
 	// Model positions
 	glm::vec3 modelPos[] = {
@@ -151,18 +125,6 @@ int main()
 		shaderProgram.setUniform("view", view);
 		shaderProgram.setUniform("projection", projection);
 
-		// Render the scene
-		for (int i = 0; i < numModels; i++)
-		{
-			model = glm::translate(glm::mat4(1.0), modelPos[i]) * glm::scale(glm::mat4(1.0), modelScale[i]);
-			if (i == 2)
-				model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-			shaderProgram.setUniform("model", model);
-
-			texture[i].bind(0);		// set the texture before drawing.  Our simple OBJ mesh loader does not do materials yet.
-			mesh[i].draw();			// Render the OBJ mesh
-			texture[i].unbind(0);
-		}
 
 		// Draw the floor
 	/*	glDrawArrays(GL_TRIANGLES, 0, 36);*/

@@ -35,6 +35,8 @@ public:
 	void setUniform(const GLchar* name, const glm::vec4& v);
 	void setUniform(const GLchar* name, const glm::mat4& m);
 
+	void setUniform(const GLchar* name, const unsigned int v);
+
 private:
 	GLuint mHandle;		// Shader Program Handle
 	string fileToString(const string& filename);

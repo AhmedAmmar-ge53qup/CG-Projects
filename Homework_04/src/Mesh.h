@@ -1,39 +1,39 @@
-//-----------------------------------------------------------------------------
-// Mesh.h
-// Basic OBJ file importer
-//-----------------------------------------------------------------------------
 #ifndef MESH_H
 #define MESH_H
-
 #include <vector>
-#include <string>
-#define GLEW_STATIC
-#include "GL/glew.h"	// Important - this header must come before glfw3 header
+#include <iostream>
 #include "glm/glm.hpp"
+#include "ShaderProgram.h"
 
-
-struct Vertex
-{
-	glm::vec3 position;
-	glm::vec2 texCoords;
+struct Vertex {
+	glm::vec3 Position;
+	glm::vec3 Normal;
+	glm::vec2 TexCoords;
+};
+struct Texture {
+	unsigned int id;
+	std::string type;
+	std::string path;
 };
 
 class Mesh
 {
 public:
 
-	 Mesh();
-	~Mesh();
 
-	bool loadOBJ(const std::string& filename);
-	void draw();
+	// Mesh Data
+	std::vector<Vertex> vertices;
+	std::vector<unsigned int> indices;
+	std::vector<Texture> textures;
+
+	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+	void Draw(ShaderProgram& shader);
 
 private:
+	GLuint VAO, VBO, EBO;
+	void setupMesh();
 
-	void initBuffers();
-
-	bool mLoaded;
-	std::vector<Vertex> mVertices;
-	GLuint mVBO, mVAO;
 };
+
 #endif //MESH_H
+

@@ -155,3 +155,9 @@ void ShaderProgram::setUniform(const GLchar* name, const glm::mat4& m)
 	GLint loc = getUniformLocation(name);
 	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(m));
 }
+
+void ShaderProgram::setUniform(const GLchar* name, const unsigned int v)
+{
+	GLint loc = getUniformLocation(name);
+	glUniform1i(loc, v);
+}
