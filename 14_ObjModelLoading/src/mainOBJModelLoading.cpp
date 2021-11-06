@@ -42,7 +42,7 @@ float maxSize = 0.8f;
 float minSize = 0.1f;
 
 //FPSCamera fpsCamera(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(1.0, 1.0, 1.0));
-FPSCamera fpsCamera(glm::vec3(0.0f, 3.0f, 10.0f));
+FPSCamera fpsCamera(glm::vec3(0.0f, 2.5f, 10.0f));
 
 const double ZOOM_SENSITIVITY = -3.0;
 const float MOVE_SPEED = 5.0; // units per second
