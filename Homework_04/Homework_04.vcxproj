@@ -41,6 +41,12 @@
     <Image Include="res\images\mario.png" />
     <Image Include="res\images\stone.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <Object Include="res\models\backpack\backpack.obj" />
+    <Object Include="res\models\cylinder.obj" />
+    <Object Include="res\models\floor.obj" />
+    <Object Include="res\models\woodcrate.obj" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

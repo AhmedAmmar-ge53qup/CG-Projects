@@ -75,7 +75,7 @@ int main()
 	shaderProgram.loadShaders("res/shaders/basic.vert", "res/shaders/basic.frag");
 
 	// Importing the model
-	Model backpack("res/models/cylinder.obj");
+	Model backpack("res/models/backpack/backpack.obj");
 
 	double lastTime = glfwGetTime();
 	float cubeAngle = 0.0f;
