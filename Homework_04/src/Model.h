@@ -10,7 +10,7 @@ class Model
 {
 
 public:
-	Model(char* path)
+	Model(string const &path)
 	{
 		loadModel(path);
 	}

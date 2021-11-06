@@ -13,7 +13,7 @@
 
 #include "ShaderProgram.h"
 #include "Camera.h"
-#include "Mesh.h"
+#include "Model.h"
 
 // Global Variables
 const char* APP_TITLE = "CG HW4 Ahmed A. Ammar";
@@ -67,36 +67,18 @@ int main()
 		std::cerr << "GLFW initialization failed" << std::endl;
 		return -1;
 	}
+	//print card info
+	Print_OpenGL_Version_Information();
 
 	//setting shaders
 	ShaderProgram shaderProgram, shaderProgramOneTex;
 	shaderProgram.loadShaders("res/shaders/basic.vert", "res/shaders/basic.frag");
 
-	// Model positions
-	glm::vec3 modelPos[] = {
-		glm::vec3(-2.5f,1.4f, 0.0f),	// cylinder
-		glm::vec3(2.5f, 1.0f, 0.0f),	// crate
-		//glm::vec3(0.0f, 0.0f, -2.0f),	// robot
-		glm::vec3(0.0f, 4.0f, 0.0f),	// dolphin
-		glm::vec3(0.0f, 0.0f, 0.0f)		// floor
-	};
-
-	// Model scale
-	glm::vec3 modelScale[] = {
-		glm::vec3(0.7f, 0.7f, 0.7f),	// cylinder
-		glm::vec3(1.0f, 1.0f, 1.0f),	// crate
-		//glm::vec3(1.0f, 1.0f, 1.0f),	// robot
-		glm::vec3(4.0f, 4.0f, 4.0f),	// dolphin
-		glm::vec3(10.0f, 1.0f, 10.0f)	// floor
-	};
+	// Importing the model
+	Model backpack("res/models/backpack/backpack.obj");
 
 	double lastTime = glfwGetTime();
 	float cubeAngle = 0.0f;
-
-	//print card info
-	Print_OpenGL_Version_Information();
-
-	// Rendering loop 
 	while (!glfwWindowShouldClose(gWindow))
 	{
 		showFPS(gWindow);
@@ -122,8 +104,11 @@ int main()
 		shaderProgram.use();
 
 		// Pass the matrices to the shader
+		shaderProgram.setUniform("model", model);
 		shaderProgram.setUniform("view", view);
 		shaderProgram.setUniform("projection", projection);
+
+		backpack.Draw(shaderProgram);
 
 
 		// Draw the floor

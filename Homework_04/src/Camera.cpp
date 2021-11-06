@@ -65,9 +65,7 @@ void FPSCamera::rotate(float yaw, float pitch)
 }
 void FPSCamera::move(const glm::vec3& offsetPos) 
 {
-	mPosition.x += offsetPos.x;
-	// Dont change the y, so the movement is restricted
-	mPosition.z += offsetPos.z;
+	mPosition += offsetPos;
 	updateCameraVectors();
 }
 
