@@ -54,6 +54,12 @@
     <ClCompile Include="src\imgui\imgui_widgets.cpp">
       <Filter>Source Files\Imgui</Filter>
     </ClCompile>
+    <ClCompile Include="src\imgui\imgui_impl_glfw.cpp">
+      <Filter>Source Files\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\imgui_impl_opengl3.cpp">
+      <Filter>Source Files\Imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ShaderProgram.h">
@@ -84,6 +90,15 @@
       <Filter>Header Files\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="src\imgui\imstb_truetype.h">
+      <Filter>Header Files\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imgui_impl_opengl3.h">
+      <Filter>Header Files\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imgui_impl_glfw.h">
+      <Filter>Header Files\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\imgui_impl_opengl3_loader.h">
       <Filter>Header Files\Imgui</Filter>
     </ClInclude>
   </ItemGroup>

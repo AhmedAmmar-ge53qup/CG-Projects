@@ -10,6 +10,9 @@
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp" //added for transform
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 #include "ShaderProgram.h"
 #include "Camera.h"
@@ -98,6 +101,18 @@ int main()
 		glm::vec3(10.0f, 1.0f, 10.0f)	// floor
 	};
 
+
+	ImGui::CreateContext();
+	ImGui_ImplGlfw_InitForOpenGL(gWindow, true);
+	ImGui_ImplOpenGL3_Init("#version 330");
+	ImGui::StyleColorsDark();
+
+	// ImGui window variables
+	bool show_demo_window = true;
+	bool show_another_window = false;
+	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+
 	double lastTime = glfwGetTime();
 	float cubeAngle = 0.0f;
 	while (!glfwWindowShouldClose(gWindow))
@@ -110,6 +125,34 @@ int main()
 		// Poll for and process events
 		glfwPollEvents();
 		update(deltaTime);
+
+		// Start the Dear ImGui frame
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		// Render ImGui Window
+		{
+			static float f = 0.0f;
+			static int counter = 0;
+
+			ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+
+			ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+			ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+			ImGui::Checkbox("Another Window", &show_another_window);
+
+			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+
+			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+				counter++;
+			ImGui::SameLine();
+			ImGui::Text("counter = %d", counter);
+
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			ImGui::End();
+		}
 
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -141,12 +184,23 @@ int main()
 
 		glBindVertexArray(0);
 
+		// Rendering
+		ImGui::Render();
+		int display_w, display_h;
+		glfwGetFramebufferSize(gWindow, &display_w, &display_h);
+		glViewport(0, 0, display_w, display_h);
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		// Swap front and back buffers
 		glfwSwapBuffers(gWindow);
 
 		lastTime = currentTime;
 	}
 
+	// Cleanup
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 	glfwTerminate();
 
 	return 0;
@@ -196,10 +250,6 @@ bool initOpenGL()
 	glfwSetKeyCallback(gWindow, glfw_onKey);
 	glfwSetFramebufferSizeCallback(gWindow, glfw_onFramebufferSize);
 	glfwSetScrollCallback(gWindow, glfw_onMouseScroll);
-
-	// Hides and grabs cursor, unlimited movement
-	glfwSetInputMode(gWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	glfwSetCursorPos(gWindow, gWindowWidth / 2.0, gWindowHeight / 2.0);
 
 	glClearColor(0.3f, 0.4f, 0.6f, 1.0f);
 
@@ -252,6 +302,7 @@ void glfw_onMouseScroll(GLFWwindow* window, double deltaX, double deltaY)
 	fpsCamera.setFOV((float)fov);
 }
 
+bool firstClick = true;
 //-----------------------------------------------------------------------------
 // Update stuff every frame
 //-----------------------------------------------------------------------------
@@ -259,15 +310,30 @@ void update(double elapsedTime)
 {
 	// Camera orientation
 	double mouseX, mouseY;
-
+		
 	// Get the current mouse cursor position delta
 	glfwGetCursorPos(gWindow, &mouseX, &mouseY);
 
-	// Rotate the camera the difference in mouse distance from the center screen.  Multiply this delta by a speed scaler
-	fpsCamera.rotate((float)(gWindowWidth / 2.0 - mouseX) * MOUSE_SENSITIVITY, (float)(gWindowHeight / 2.0 - mouseY) * MOUSE_SENSITIVITY);
+	if (glfwGetMouseButton(gWindow, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+	{	
+		if (firstClick) {
+			glfwSetCursorPos(gWindow, gWindowWidth / 2.0, gWindowHeight / 2.0);
+			firstClick = false;
+			glfwGetCursorPos(gWindow, &mouseX, &mouseY);
+		}
+		glfwSetCursorPos(gWindow, gWindowWidth / 2.0, gWindowHeight / 2.0);
 
-	// Clamp mouse cursor to center of screen
-	glfwSetCursorPos(gWindow, gWindowWidth / 2.0, gWindowHeight / 2.0);
+		glfwSetInputMode(gWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+		// Rotate the camera the difference in mouse distance from the center screen.  Multiply this delta by a speed scaler
+		fpsCamera.rotate((float)(gWindowWidth / 2.0 - mouseX) * MOUSE_SENSITIVITY, (float)(gWindowHeight / 2.0 - mouseY) * MOUSE_SENSITIVITY);
+	}
+	else if (glfwGetMouseButton(gWindow, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
+		glfwSetInputMode(gWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		firstClick = true;
+	}
+		
+
 
 	// Camera FPS movement
 
