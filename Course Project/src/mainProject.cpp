@@ -17,6 +17,7 @@
 #include "ShaderProgram.h"
 #include "Camera.h"
 #include "Model.h"
+#include "Cube.h"
 
 // Global Variables
 const char* APP_TITLE = "CG HW4 Ahmed A. Ammar";
@@ -72,6 +73,58 @@ int main()
 	}
 	//print card info
 	Print_OpenGL_Version_Information();
+
+	GLfloat vertices[] = {
+		// position			 // colors
+
+		//front face
+		-1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
+		 1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
+		 1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
+		-1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
+		-1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
+		 1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
+
+		 //back face
+		-1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		 1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		-1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		-1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+
+		 //left face
+		-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f, -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f, -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+
+		//right face
+		1.0f,  1.0f,  1.0f, 1.0f, 1.0f, 0.0f,
+		1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f,
+		1.0f,  1.0f, -1.0f, 1.0f, 1.0f, 0.0f,
+		1.0f,  1.0f,  1.0f, 1.0f, 1.0f, 0.0f,
+		1.0f, -1.0f,  1.0f, 1.0f, 1.0f, 0.0f,
+		1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f,
+
+		//top face
+	  -1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 1.0f,
+	   1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 1.0f,
+	   1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 1.0f,
+	  -1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 1.0f,
+	  -1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 1.0f,
+	   1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 1.0f,
+
+	   //bottom face
+	 -1.0f, -1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+	  1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+	  1.0f, -1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+	 -1.0f, -1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+	 -1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+	  1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f
+	};
 
 	//setting shaders
 	ShaderProgram shaderProgram, shaderProgramOneTex;
@@ -130,11 +183,15 @@ int main()
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-
+		static float v[] = { 0.0f, 0.0f, 0.0f };
 		// Render ImGui Window
 		{
 			static float f = 0.0f;
 			static int counter = 0;
+			
+			Cube cube1 = Cube(vertices);
+			cube1.model = glm::translate(cube1.model, glm::vec3(v[0], v[1], v[2]));
+			cube1.Draw(shaderProgram);
 
 			ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
@@ -143,6 +200,7 @@ int main()
 			ImGui::Checkbox("Another Window", &show_another_window);
 
 			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::SliderFloat3("translate", v, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
 			ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
 			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
@@ -176,7 +234,7 @@ int main()
 		{
 			model = glm::translate(glm::mat4(1.0), modelPos[i]) * glm::scale(glm::mat4(1.0), modelScale[i]);
 			if (i == 2)
-				model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
+				model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
 			shaderProgram.setUniform("model", model);
 
 			models[i].Draw(shaderProgram);
