@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #include <iostream>
 #include <sstream>
+#include <vector>
 #define GLEW_STATIC
 #include "GL/glew.h"	// Important - this header must come before glfw3 header
 #include "GLFW/glfw3.h"
@@ -103,6 +104,12 @@ int main()
 		glm::vec3(10.0f, 1.0f, 10.0f)	// floor
 	};
 
+	//-------------------------------------------------------------- THE CUBES -----------------------------------------------------------------
+	// Loading the Cubes
+	static int numCubes = 2;
+	std::vector<Cube> cubes(numCubes);	// Constructor Gets Called here automatically
+	static float cubePositions[2][3] = { {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
+
 
 	ImGui::CreateContext();
 	ImGui_ImplGlfw_InitForOpenGL(gWindow, true);
@@ -123,7 +130,7 @@ int main()
 		double deltaTime = currentTime - lastTime;
 
 		showFPS(gWindow);
-
+		
 		// Poll for and process events
 		glfwPollEvents();
 		update(deltaTime);
@@ -132,7 +139,6 @@ int main()
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		static float v[] = { 0.0f, 0.0f, 0.0f };
 		// Render ImGui Window
 		{
 			static float f = 0.0f;
@@ -146,13 +152,18 @@ int main()
 			ImGui::Checkbox("Another Window", &show_another_window);
 
 			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-			ImGui::SliderFloat3("translate", v, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::SliderFloat3("cube1", cubePositions[0], -1.0f, 1.0f);            // Edit 3 float using a slider from -1.0f to 1.0f
+			ImGui::SliderFloat3("cube2", cubePositions[1], -1.0f, 1.0f);            // Edit 3 float using a slider from -1.0f to 1.0f
 			ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
 			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-				counter++;
+			{
+				numCubes++;
+				cubes.push_back(Cube());	// Add a new cube
+			}
+				
 			ImGui::SameLine();
-			ImGui::Text("counter = %d", counter);
+			ImGui::Text("counter = %d", numCubes);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
@@ -186,12 +197,21 @@ int main()
 			models[i].Draw(shaderProgram);	// glBindVertexArray(0) called automatically for cleanup
 		}
 
-		Cube cube1 = Cube();
+
 		cubeShader.use();
-		cube1.model = glm::translate(cube1.model, glm::vec3(v[0], v[1], v[2]));
+		cubeShader.setUniform("model", glm::mat4(1.0));
 		cubeShader.setUniform("view", view);
 		cubeShader.setUniform("projection", projection);
-		cube1.Draw(cubeShader);
+
+		for (int i = 0; i < numCubes; i++) {
+			std::string s = "Cube " + std::to_string(i + 1);
+			ImGui::Begin(s.c_str());
+			ImGui::SliderFloat3("Position", cubePositions[i], -1.0f, 1.0f);
+			ImGui::End();
+
+			cubes[i].model = glm::translate(glm::mat4(1.0f), glm::vec3(cubePositions[i][0], cubePositions[i][1], cubePositions[i][2]));
+			cubes[i].Draw(cubeShader);
+		}
 
 		// Rendering
 		ImGui::Render();
