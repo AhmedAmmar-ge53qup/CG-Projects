@@ -2,17 +2,70 @@
 #define CUBE_H
 
 #include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 
 class Cube
 {
 public:
-	Cube(GLfloat vertices[]);
+	Cube();
 	void Draw(ShaderProgram& shaderProgram);
+	void setupCube();
 	glm::mat4 model;
 
 private:
-	GLfloat vertices[36];
+	GLuint VAO, VBO;
+	GLfloat vertices[216] = {
+		// position			 // colors
+
+		//front face
+		-1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
+		 1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
+		 1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
+		-1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
+		-1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
+		 1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
+
+		 //back face
+		-1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		 1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		-1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		-1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+
+		 //left face
+		-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f, -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f, -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+
+		//right face
+		1.0f,  1.0f,  1.0f, 1.0f, 1.0f, 0.0f,
+		1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f,
+		1.0f,  1.0f, -1.0f, 1.0f, 1.0f, 0.0f,
+		1.0f,  1.0f,  1.0f, 1.0f, 1.0f, 0.0f,
+		1.0f, -1.0f,  1.0f, 1.0f, 1.0f, 0.0f,
+		1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f,
+
+		//top face
+	  -1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 1.0f,
+	   1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 1.0f,
+	   1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 1.0f,
+	  -1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 1.0f,
+	  -1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 1.0f,
+	   1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 1.0f,
+
+	   //bottom face
+	 -1.0f, -1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+	  1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+	  1.0f, -1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+	 -1.0f, -1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+	 -1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+	  1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f
+	};
 };
 #endif	//CUBE_H
 

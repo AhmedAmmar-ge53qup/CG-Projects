@@ -50,8 +50,10 @@
     <ClInclude Include="src\ShaderProgram.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\basic.frag" />
-    <None Include="res\shaders\basic.vert" />
+    <None Include="res\shaders\cube.frag" />
+    <None Include="res\shaders\cube.vert" />
+    <None Include="res\shaders\main.frag" />
+    <None Include="res\shaders\main.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -109,10 +109,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\basic.frag">
+    <None Include="res\shaders\main.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="res\shaders\basic.vert">
+    <None Include="res\shaders\main.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\cube.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\cube.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

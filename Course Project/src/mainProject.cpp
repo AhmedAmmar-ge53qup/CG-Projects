@@ -74,61 +74,10 @@ int main()
 	//print card info
 	Print_OpenGL_Version_Information();
 
-	GLfloat vertices[] = {
-		// position			 // colors
-
-		//front face
-		-1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
-		 1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
-		 1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
-		-1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
-		-1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
-		 1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 0.0f,
-
-		 //back face
-		-1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-		 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-		 1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-		-1.0f,  1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-		-1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-		 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-
-		 //left face
-		-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 1.0f,
-		-1.0f, -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-		-1.0f,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-		-1.0f,  1.0f, -1.0f, 0.0f, 0.0f, 1.0f,
-		-1.0f, -1.0f, -1.0f, 0.0f, 0.0f, 1.0f,
-		-1.0f, -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-
-		//right face
-		1.0f,  1.0f,  1.0f, 1.0f, 1.0f, 0.0f,
-		1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f,
-		1.0f,  1.0f, -1.0f, 1.0f, 1.0f, 0.0f,
-		1.0f,  1.0f,  1.0f, 1.0f, 1.0f, 0.0f,
-		1.0f, -1.0f,  1.0f, 1.0f, 1.0f, 0.0f,
-		1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f,
-
-		//top face
-	  -1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 1.0f,
-	   1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 1.0f,
-	   1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 1.0f,
-	  -1.0f,  1.0f, -1.0f, 1.0f, 0.0f, 1.0f,
-	  -1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 1.0f,
-	   1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 1.0f,
-
-	   //bottom face
-	 -1.0f, -1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-	  1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-	  1.0f, -1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-	 -1.0f, -1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-	 -1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-	  1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f
-	};
-
 	//setting shaders
-	ShaderProgram shaderProgram, shaderProgramOneTex;
-	shaderProgram.loadShaders("res/shaders/basic.vert", "res/shaders/basic.frag");
+	ShaderProgram shaderProgram, cubeShader;
+	shaderProgram.loadShaders("res/shaders/main.vert", "res/shaders/main.frag");
+	cubeShader.loadShaders("res/shaders/cube.vert", "res/shaders/cube.frag");
 
 	// Loading the models
 	const int numModels = 4;
@@ -170,10 +119,10 @@ int main()
 	float cubeAngle = 0.0f;
 	while (!glfwWindowShouldClose(gWindow))
 	{
-		showFPS(gWindow);
-
 		double currentTime = glfwGetTime();
 		double deltaTime = currentTime - lastTime;
+
+		showFPS(gWindow);
 
 		// Poll for and process events
 		glfwPollEvents();
@@ -188,10 +137,7 @@ int main()
 		{
 			static float f = 0.0f;
 			static int counter = 0;
-			
-			Cube cube1 = Cube(vertices);
-			cube1.model = glm::translate(cube1.model, glm::vec3(v[0], v[1], v[2]));
-			cube1.Draw(shaderProgram);
+		
 
 			ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
@@ -234,13 +180,18 @@ int main()
 		{
 			model = glm::translate(glm::mat4(1.0), modelPos[i]) * glm::scale(glm::mat4(1.0), modelScale[i]);
 			if (i == 2)
-				model = glm::translate(model, glm::vec3(v[0], v[1], v[2]));
+				model = glm::translate(model, glm::vec3(0.0f, 0.0f, 2.0f));
 			shaderProgram.setUniform("model", model);
 
-			models[i].Draw(shaderProgram);
+			models[i].Draw(shaderProgram);	// glBindVertexArray(0) called automatically for cleanup
 		}
 
-		glBindVertexArray(0);
+		Cube cube1 = Cube();
+		cubeShader.use();
+		cube1.model = glm::translate(cube1.model, glm::vec3(v[0], v[1], v[2]));
+		cubeShader.setUniform("view", view);
+		cubeShader.setUniform("projection", projection);
+		cube1.Draw(cubeShader);
 
 		// Rendering
 		ImGui::Render();
