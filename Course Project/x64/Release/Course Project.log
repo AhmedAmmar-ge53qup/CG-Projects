@@ -2,9 +2,8 @@
   mainProject.cpp
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Generating code
-  46 of 2372 functions ( 1.9%) were compiled, the rest were copied from previous compilation.
-    17 functions were new in current compilation
-    64 functions had inline decision re-evaluated but remain unchanged
+  Previous IPDB and IOBJ mismatch, fall back to full compilation.
+  All 2411 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
 glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'D:\Courses-lectures\Courses_Only\Semester 7\Computer Graphics\Projects\Course Project\bin\vc120.pdb'; linking object as if no debug info
   Course Project.vcxproj -> D:\Courses-lectures\Courses_Only\Semester 7\Computer Graphics\Projects\Course Project\bin\Course Project.exe

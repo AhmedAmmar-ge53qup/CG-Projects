@@ -106,9 +106,10 @@ int main()
 
 	//-------------------------------------------------------------- THE CUBES -----------------------------------------------------------------
 	// Loading the Cubes
-	static int numCubes = 2;
-	std::vector<Cube> cubes(numCubes);	// Constructor Gets Called here automatically
-	static float cubePositions[2][3] = { {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
+	static int numCubes = 1;			// Must start with at least 1 cube on screen
+	std::vector<Cube> cubes(1);	// Constructor Gets Called here automatically
+	static std::vector<float[3]> cubePositions(50);	// 50 cubes are the maximum limit
+	static std::vector<float[3]> cubeColors(50);
 
 
 	ImGui::CreateContext();
@@ -206,9 +207,11 @@ int main()
 		for (int i = 0; i < numCubes; i++) {
 			std::string s = "Cube " + std::to_string(i + 1);
 			ImGui::Begin(s.c_str());
-			ImGui::SliderFloat3("Position", cubePositions[i], -1.0f, 1.0f);
+			ImGui::SliderFloat3("Position", cubePositions[i], -10.0f, 10.0f);
+			ImGui::ColorEdit3("Color", cubeColors[i]); // Edit 3 floats representing a color
 			ImGui::End();
 
+			cubeShader.setUniform("color", glm::vec3(cubeColors[i][0], cubeColors[i][1], cubeColors[i][2]));
 			cubes[i].model = glm::translate(glm::mat4(1.0f), glm::vec3(cubePositions[i][0], cubePositions[i][1], cubePositions[i][2]));
 			cubes[i].Draw(cubeShader);
 		}
