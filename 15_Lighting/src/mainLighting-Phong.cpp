@@ -79,7 +79,7 @@ int main()
 	lightShader.loadShaders("res/shaders/lamp.vert", "res/shaders/lamp.frag");
 
 	// Load meshes and textures
-	const int numModels = 4;
+	const int numModels = 5;
 	Mesh mesh[numModels];
 	Texture texture[numModels];
 
@@ -88,7 +88,7 @@ int main()
 	mesh[1].loadOBJ("res/models/woodcrate.obj");
 	mesh[2].loadOBJ("res/models/dolphinHighPoly.obj");
 	mesh[3].loadOBJ("res/models/floor.obj");
-	//mesh[3].loadOBJ("res/models/floor-pavement.obj"); //my floor
+	mesh[4].loadOBJ("res/models/redball.obj");
 
 	// Load the light
 	Mesh lightMesh;
@@ -106,13 +106,17 @@ int main()
 	filename = "res/models/Floor_ConcreteHerringbone.jpg";
 	texture[3].loadTexture(filename, true); //my floor
 
+	filename = "res/models/redball.png";
+	texture[4].loadTexture(filename, true);
+
 	// Model positions
 	glm::vec3 modelPos[] = {
 		glm::vec3(-2.5f,1.4f, 0.0f),	// cylinder
 		glm::vec3(2.5f, 1.0f, 0.0f),	// crate
 		//glm::vec3(0.0f, 0.0f, -2.0f),	// robot
 		glm::vec3(0.0f, 4.0f, 0.0f),	// dolphin
-		glm::vec3(0.0f, 0.0f, 0.0f)		// floor
+		glm::vec3(0.0f, 0.0f, 0.0f),		// floor
+		glm::vec3(0.0f, 0.0f, 0.0f)		// ball
 	};
 
 	// Model scale
@@ -121,7 +125,8 @@ int main()
 		glm::vec3(1.0f, 1.0f, 1.0f),	// crate
 		//glm::vec3(1.0f, 1.0f, 1.0f),	// robot
 		glm::vec3(4.0f, 4.0f, 4.0f),	// dolphin
-		glm::vec3(10.0f, 1.0f, 10.0f)	// floor
+		glm::vec3(10.0f, 1.0f, 10.0f),	// floor
+		glm::vec3(1.0f, 1.0f, 1.0f)	// ball
 	};
 
 	double lastTime = glfwGetTime();
@@ -166,7 +171,7 @@ int main()
 		
 		// Move the light around
 		angle += (float)deltaTime * 50.0f;
-		lightPos.x += 0.8f * sinf(glm::radians(angle));
+		lightPos.x += 10.0f * sinf(glm::radians(angle));
 
 
 		shaderProgram.use();
