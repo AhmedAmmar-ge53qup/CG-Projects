@@ -71,7 +71,7 @@ int main()
 
 	//setting shaders
 	ShaderProgram shaderProgram, shaderProgramOneTex;
-	shaderProgram.loadShaders("res/shaders/lighting-phong.vert", "res/shaders/lighting-phong.frag");
+	shaderProgram.loadShaders("res/shaders/material.vert", "res/shaders/material.frag");
 	//shaderProgramOneTex.loadShaders("res/shaders/camera.vert", "res/shaders/texture.frag");
 
 	// Shader for Light (lamp)
@@ -179,10 +179,13 @@ int main()
 		// Pass the matrices to the shader
 		shaderProgram.setUniform("view", view);
 		shaderProgram.setUniform("projection", projection);
-		// For the lighting
 		shaderProgram.setUniform("viewPos", viewPos);
-		shaderProgram.setUniform("lightPos", lightPos);
-		shaderProgram.setUniform("lightColor", lightColor);
+		// For the light material
+		shaderProgram.setUniform("light.position", lightPos);
+		shaderProgram.setUniform("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+		shaderProgram.setUniform("light.diffuse", lightColor);
+		shaderProgram.setUniform("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
 
 		// Render the scene
 		for (int i = 0; i < numModels; i++)
@@ -191,6 +194,12 @@ int main()
 			if (i == 2)
 				model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			shaderProgram.setUniform("model", model);
+
+			// Set the Material for the models (we set them all the same now for convinience)
+			shaderProgram.setUniform("material.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+			shaderProgram.setUniformSampler("material.diffuseMap", 0);
+			shaderProgram.setUniform("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+			shaderProgram.setUniform("material.shininess", 40.0f);
 
 			texture[i].bind(0);		// set the texture before drawing.  Our simple OBJ mesh loader does not do materials yet.
 			mesh[i].draw();			// Render the OBJ mesh

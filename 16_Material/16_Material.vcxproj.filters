@@ -52,13 +52,19 @@
     <None Include="res\shaders\lamp.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="res\shaders\lighting-phong.frag">
+    <None Include="res\shaders\lighting-blinn-phong.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="res\shaders\lighting-phong.vert">
+    <None Include="res\shaders\lighting-blinn-phong.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="res\shaders\lamp.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\material.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\material.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
