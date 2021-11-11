@@ -61,6 +61,8 @@ void showFPS(GLFWwindow* window);
 bool initOpenGL();
 void Print_OpenGL_Version_Information();
 
+glm::vec3 getMouseRay(double, double);
+
 //-----------------------------------------------------------------------------
 // Main Application Entry Point
 //-----------------------------------------------------------------------------
@@ -206,7 +208,6 @@ int main()
 			models[i].Draw(shaderProgram);	// glBindVertexArray(0) called automatically for cleanup
 		}
 
-
 		cubeShader.use();
 		cubeShader.setUniform("model", glm::mat4(1.0));
 		cubeShader.setUniform("view", view);
@@ -253,7 +254,7 @@ int main()
 		glfwSwapBuffers(gWindow);
 
 		lastTime = currentTime;
-	}
+	} // End of Game Loop
 
 	// Cleanup
 	ImGui_ImplOpenGL3_Shutdown();
@@ -368,9 +369,10 @@ void update(double elapsedTime)
 {
 	// Camera orientation
 	double mouseX, mouseY;
-		
 	// Get the current mouse cursor position delta
 	glfwGetCursorPos(gWindow, &mouseX, &mouseY);
+
+	std::cout << "[" << getMouseRay(mouseX, mouseY).x << ", " << getMouseRay(mouseX, mouseY).y << ", " << getMouseRay(mouseX, mouseY).z << "]\n";
 
 	if (glfwGetMouseButton(gWindow, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
 	{	
@@ -384,7 +386,7 @@ void update(double elapsedTime)
 		glfwSetInputMode(gWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 		// Rotate the camera the difference in mouse distance from the center screen.  Multiply this delta by a speed scaler
-		fpsCamera.rotate((float)(gWindowWidth / 2.0 - mouseX) * MOUSE_SENSITIVITY, (float)(gWindowHeight / 2.0 - mouseY) * MOUSE_SENSITIVITY);
+		fpsCamera.rotate((float)(gWindowWidth / 2.0f - mouseX) * MOUSE_SENSITIVITY, (float)(gWindowHeight / 2.0f - mouseY) * MOUSE_SENSITIVITY);
 	}
 	else if (glfwGetMouseButton(gWindow, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
 		glfwSetInputMode(gWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -412,6 +414,28 @@ void update(double elapsedTime)
 		fpsCamera.move(MOVE_SPEED * (float)elapsedTime * fpsCamera.getUp());
 	else if (glfwGetKey(gWindow, GLFW_KEY_Q) == GLFW_PRESS)
 		fpsCamera.move(MOVE_SPEED * (float)elapsedTime * -fpsCamera.getUp());
+}
+
+glm::vec3 getMouseRay(double mouseX, double mouseY) {
+	// Get Mouse Position in Normalized Device Coordinates
+	float x = (2.0f * mouseX) / gWindowWidth - 1;
+	float y = (2.0f * mouseY) / gWindowHeight - 1;
+	glm::vec2 ndc = glm::vec2(x, y);
+
+	// Get Mouse Clip Coordinates
+	glm::vec4 clipCoords = glm::vec4(ndc.x, ndc.y, -1.0f, 1.0f);
+
+	// Get Mouse Eye Coordinates
+	glm::mat4 projection = glm::perspective(glm::radians(fpsCamera.getFOV()), (float)gWindowWidth / (float)gWindowHeight, 0.1f, 200.0f);
+	glm::mat4 invertedProjection = glm::inverse(projection);
+	glm::vec4 eyeCoords = clipCoords * invertedProjection;
+
+	// Get Mouse in World Coordinates
+	glm::mat4 invertedView = glm::inverse(fpsCamera.getViewMatrix());
+	glm::vec4 rayWorld = eyeCoords * invertedView;
+	glm::vec3 worldRay = glm::normalize(glm::vec3(rayWorld.x, rayWorld.y, rayWorld.z));
+
+	return worldRay;
 }
 
 //-----------------------------------------------------------------------------
