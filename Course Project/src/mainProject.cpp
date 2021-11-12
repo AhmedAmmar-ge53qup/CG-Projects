@@ -14,6 +14,7 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+#include "imgui/ImGuiFileDialog.h"
 
 #include "ShaderProgram.h"
 #include "Camera.h"
@@ -83,8 +84,8 @@ int main()
 	cubeShader.loadShaders("res/shaders/cube.vert", "res/shaders/cube.frag");
 
 	// Loading the models
-	const int numModels = 4;
-	Model models[numModels];
+	static int numModels = 4;
+	std::vector<Model> models(4);
 	models[0].loadModel("res/models/floor.obj");
 	models[1].loadModel("res/models/woodcrate.obj");
 	models[2].loadModel("res/models/backpack/backpack.obj");
@@ -159,6 +160,28 @@ int main()
 			ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
 			ImGui::Checkbox("Another Window", &show_another_window);
 
+			// open Dialog Simple
+			if (ImGui::Button("Open File Dialog"))
+				ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".obj,.cpp,.h,.hpp", ".");
+
+			// display
+			if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey"))
+			{
+				// action if OK
+				if (ImGuiFileDialog::Instance()->IsOk())
+				{
+					std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
+					std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
+					std::replace(filePathName.begin(), filePathName.end(), '\\', '/');
+
+					models.push_back(Model());
+					models[numModels++].loadModel(filePathName);
+				}
+
+				// close
+				ImGuiFileDialog::Instance()->Close();
+			}
+
 			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
 			ImGui::SliderFloat3("cube1", cubePositions[0], -1.0f, 1.0f);            // Edit 3 float using a slider from -1.0f to 1.0f
 			ImGui::SliderFloat3("cube2", cubePositions[1], -1.0f, 1.0f);            // Edit 3 float using a slider from -1.0f to 1.0f
@@ -219,9 +242,8 @@ int main()
 						modelScale[i][j] = 10.0f;
 						continue;
 					}
-					modelScale[i][j] = 0.0f;
+					modelScale[i][j] = 1.0f;
 				}
-
 
 			s = "Rotate";
 			s.insert(s.length(), std::to_string(i));

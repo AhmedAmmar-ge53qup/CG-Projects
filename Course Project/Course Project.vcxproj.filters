@@ -22,6 +22,9 @@
     <Filter Include="Header Files\Imgui">
       <UniqueIdentifier>{f62b8beb-47a5-409e-8e7a-6bbb5a1957d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Imgui\dirent">
+      <UniqueIdentifier>{e731148c-b17e-4e1b-93fc-0c4dc88a3be2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Camera.cpp">
@@ -62,6 +65,9 @@
     </ClCompile>
     <ClCompile Include="src\Cube.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\ImGuiFileDialog.cpp">
+      <Filter>Source Files\Imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +112,15 @@
     </ClInclude>
     <ClInclude Include="src\Cube.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\ImGuiFileDialog.h">
+      <Filter>Header Files\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\ImGuiFileDialogConfig.h">
+      <Filter>Header Files\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imgui\dirent\dirent.h">
+      <Filter>Header Files\Imgui\dirent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
