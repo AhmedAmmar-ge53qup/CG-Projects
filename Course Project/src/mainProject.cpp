@@ -195,37 +195,50 @@ int main()
 		shaderProgram.setUniform("view", view);
 		shaderProgram.setUniform("projection", projection);
 
+		ImGui::Begin("Imported Models");
 		for (int i = 0; i < numModels; i++)
 		{
-			ImGui::Begin(models[i].getFileName().c_str());
-			ImGui::SliderFloat3("Position", modelPos[i], -10.0f, 10.0f);
-			if (ImGui::Button("Position"))
+			std::string s = models[i].getFileName();
+			s.insert(0, "--------------- ");
+			s.insert(s.length(), " ---------------");
+			ImGui::Text(s.c_str());
+
+			s = "Position";
+			s.insert(s.length(), std::to_string(i));
+			ImGui::SliderFloat3(s.c_str(), modelPos[i], -10.0f, 10.0f);
+			if (ImGui::Button(s.c_str()))
 				for (int j = 0; j < 3; j++)
 					modelPos[i][j] = 0.0f;
 
-			ImGui::SliderFloat3("Scale", modelScale[i], -10.0f, 10.0f);
-			if (ImGui::Button("Scale"))
-				for (int j = 0; j < 3; j++)
-					if (i == 0) {
-						modelScale[i][0] = 10.0f;
-						modelScale[i][1] = 0.0f;
-						modelScale[i][2] = 10.0f;
+			s = "Scale";
+			s.insert(s.length(), std::to_string(i));
+			ImGui::SliderFloat3(s.c_str(), modelScale[i], -10.0f, 10.0f);
+			if (ImGui::Button(s.c_str()))
+				for (int j = 0; j < 3; j++) {
+					if (i == 0 && (j == 0 || j == 2)) {
+						modelScale[i][j] = 10.0f;
+						continue;
 					}
+					modelScale[i][j] = 0.0f;
+				}
 
-			ImGui::SliderFloat3("Rotate", modelRotate[i], 0.0f, 360.0f);
-			if (ImGui::Button("Rotate"))
+
+			s = "Rotate";
+			s.insert(s.length(), std::to_string(i));
+			ImGui::SliderFloat3(s.c_str(), modelRotate[i], 0.0f, 360.0f);
+			if (ImGui::Button(s.c_str()))
 				for (int j = 0; j < 3; j++)
 					modelRotate[i][j] = 0.0f;
-			ImGui::End();
 
 			model = glm::translate(glm::mat4(1.0), glm::vec3(modelPos[i][0], modelPos[i][1], modelPos[i][2]));
-			model = glm::scale(model, glm::vec3(modelScale[i][0], modelScale[i][1], modelScale[i][2]));
 			model = glm::rotate(model, glm::radians(modelRotate[i][0]), glm::vec3(1.0f, 0.0f, 0.0f));
 			model = glm::rotate(model, glm::radians(modelRotate[i][1]), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::rotate(model, glm::radians(modelRotate[i][2]), glm::vec3(0.0f, 0.0f, 1.0f));
+			model = glm::scale(model, glm::vec3(modelScale[i][0], modelScale[i][1], modelScale[i][2]));
 			shaderProgram.setUniform("model", model);
 			models[i].Draw(shaderProgram);	// glBindVertexArray(0) called automatically for cleanup
 		}
+		ImGui::End();
 
 		cubeShader.use();
 		cubeShader.setUniform("model", glm::mat4(1.0));
@@ -373,11 +386,13 @@ void glfw_onFramebufferSize(GLFWwindow* window, int width, int height)
 //-----------------------------------------------------------------------------
 void glfw_onMouseScroll(GLFWwindow* window, double deltaX, double deltaY)
 {
-	double fov = fpsCamera.getFOV() + deltaY * ZOOM_SENSITIVITY;
+	if (glfwGetKey(gWindow, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+	{
+		double fov = fpsCamera.getFOV() + deltaY * ZOOM_SENSITIVITY;
+		fov = glm::clamp(fov, 1.0, 120.0);
+		fpsCamera.setFOV((float)fov);
+	}
 
-	fov = glm::clamp(fov, 1.0, 120.0);
-
-	fpsCamera.setFOV((float)fov);
 }
 
 bool firstClick = true;
