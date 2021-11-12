@@ -27,7 +27,7 @@ void Cube::setupCube() {
 	glBindVertexArray(VAO);		// Set it as the active one (State Machine)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), nullptr); // Position
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat))); //Textures
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat))); // Normals
 	glEnableVertexAttribArray(1);
 
 	glBindVertexArray(0);	// Cleanup

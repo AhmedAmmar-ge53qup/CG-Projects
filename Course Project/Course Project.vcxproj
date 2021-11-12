@@ -56,6 +56,8 @@
   <ItemGroup>
     <None Include="res\shaders\cube.frag" />
     <None Include="res\shaders\cube.vert" />
+    <None Include="res\shaders\lamp.frag" />
+    <None Include="res\shaders\lamp.vert" />
     <None Include="res\shaders\main.frag" />
     <None Include="res\shaders\main.vert" />
   </ItemGroup>

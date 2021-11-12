@@ -79,9 +79,10 @@ int main()
 	Print_OpenGL_Version_Information();
 
 	//setting shaders
-	ShaderProgram shaderProgram, cubeShader;
+	ShaderProgram shaderProgram, cubeShader, lightShader;
 	shaderProgram.loadShaders("res/shaders/main.vert", "res/shaders/main.frag");
 	cubeShader.loadShaders("res/shaders/cube.vert", "res/shaders/cube.frag");
+	lightShader.loadShaders("res/shaders/lamp.vert", "res/shaders/lamp.frag");
 
 	// Loading the models
 	static int numModels = 1;
@@ -101,6 +102,10 @@ int main()
 			modelScale[i][j] = 1.0f;
 		}
 	static std::vector<float[3]> modelRotate(MAX_numModels);
+
+	// Load the Light
+	Model lightMesh;
+	lightMesh.loadModel("res/models/light.obj");
 
 
 	// Loading the Cubes
@@ -126,7 +131,6 @@ int main()
 
 
 	double lastTime = glfwGetTime();
-	float cubeAngle = 0.0f;
 	while (!glfwWindowShouldClose(gWindow))
 	{
 		double currentTime = glfwGetTime();
@@ -193,12 +197,40 @@ int main()
 		// Create the projection matrix
 		projection = glm::perspective(glm::radians(fpsCamera.getFOV()), (float)gWindowWidth / (float)gWindowHeight, 0.1f, 200.0f);
 
-		shaderProgram.use();
+		// Set the view position (camera pos)
+		glm::vec3 viewPos;
+		viewPos.x = fpsCamera.getPosition().x;
+		viewPos.y = fpsCamera.getPosition().y;
+		viewPos.z = fpsCamera.getPosition().z;
 
+		// Set the light properties
+		static float lightPos[] = { 0.0f, 1.0f, 10.0f };
+		static float lightColor[] = { 1.0f, 1.0f, 1.0f };
+
+		// Move the light around
+		ImGui::Begin("Light");
+		ImGui::SliderFloat3("Position", lightPos, -10.0f, 10.0f);
+		ImGui::ColorEdit3("Color", lightColor);
+		ImGui::End();
+
+		// Draw the light
+		model = glm::translate(glm::mat4(1.0), glm::vec3(lightPos[0], lightPos[1], lightPos[2]));
+		lightShader.use();
+		lightShader.setUniform("model", model);
+		lightShader.setUniform("view", view);
+		lightShader.setUniform("projection", projection);
+		lightShader.setUniform("lightColor", glm::vec3(lightColor[0], lightColor[1], lightColor[2]));
+		lightMesh.Draw(lightShader);
+
+		shaderProgram.use();
 		// Pass the matrices to the shader
 		shaderProgram.setUniform("model", model);
 		shaderProgram.setUniform("view", view);
 		shaderProgram.setUniform("projection", projection);
+		shaderProgram.setUniform("viewPos", viewPos);
+		shaderProgram.setUniform("lightPos", glm::vec3(lightPos[0], lightPos[1], lightPos[2]));
+		shaderProgram.setUniform("lightColor", glm::vec3(lightColor[0], lightColor[1], lightColor[2]));
+
 
 		ImGui::Begin("Imported Models");
 		for (int i = 0; i < numModels; i++)
@@ -272,6 +304,8 @@ int main()
 			ImGui::EndChild();
 
 			cubeShader.setUniform("color", glm::vec3(cubeColors[i][0], cubeColors[i][1], cubeColors[i][2]));
+			cubeShader.setUniform("lightPos", glm::vec3(lightPos[0], lightPos[1], lightPos[2]));
+			cubeShader.setUniform("lightColor", glm::vec3(lightColor[0], lightColor[1], lightColor[2]));
 			cubes[i].model = glm::translate(glm::mat4(1.0f), glm::vec3(cubePositions[i][0], cubePositions[i][1], cubePositions[i][2]));
 			cubes[i].model = glm::rotate(cubes[i].model, glm::radians(cubeRotations[i][0]), glm::vec3(1.0f, 0.0f, 0.0f));
 			cubes[i].model = glm::rotate(cubes[i].model, glm::radians(cubeRotations[i][1]), glm::vec3(0.0f, 1.0f, 0.0f));
