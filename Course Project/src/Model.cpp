@@ -9,7 +9,7 @@ void Model::Draw(ShaderProgram& shader)
 		meshes[i].Draw(shader);
 }
 
-void Model::loadModel(string path)
+bool Model::loadModel(string path)
 {
 	Assimp::Importer import;
 	const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -17,11 +17,13 @@ void Model::loadModel(string path)
 		!scene->mRootNode)
 	{
 		std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
-		return;
+		return false;
 	}
 	directory = path.substr(0, path.find_last_of('/'));
 	fileName = path.substr(path.find_last_of('/')+1, path.length());
 	processNode(scene->mRootNode, scene);
+
+	return true;
 }
 
 std::string Model::getFileName()

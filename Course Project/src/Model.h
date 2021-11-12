@@ -15,7 +15,7 @@ public:
 	{
 		loadModel(path);
 	}
-	void loadModel(string path);
+	bool loadModel(string path);
 	void Draw(ShaderProgram& shader);
 	std::string getFileName();
 

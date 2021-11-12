@@ -85,34 +85,36 @@ int main()
 
 	// Loading the models
 	static int numModels = 1;
+	int MAX_numModels = 100;
 	std::vector<Model> models(1);
-	models[0].loadModel("res/models/floor.obj");;
-
-	static std::vector<float[3]> modelPos(50);
-	static std::vector<float[3]> modelScale(50);
-	for (int i = 0; i < 50; i++)
+	models[0].loadModel("res/models/floor.obj");
+	static std::vector<float[3]> modelPos(MAX_numModels);
+	static std::vector<float[3]> modelScale(MAX_numModels);
+	for (int i = 0; i < MAX_numModels; i++)
 		for (int j = 0; j < 3; j++)
 		{
 			if (i == 0 && (j == 0 || j == 2)) {
 				modelScale[i][j] = 10.0f;
+				modelPos[i][1] = -1.0f;
 				continue;
 			}
 			modelScale[i][j] = 1.0f;
 		}
-	static std::vector<float[3]> modelRotate(50);
+	static std::vector<float[3]> modelRotate(MAX_numModels);
 
-	//-------------------------------------------------------------- THE CUBES -----------------------------------------------------------------
+
 	// Loading the Cubes
 	static int numCubes = 1;			// Must start with at least 1 cube on screen
+	int MAX_numCubes = 100;
 	std::vector<Cube> cubes(1);	// Constructor Gets Called here automatically
-	static std::vector<float[3]> cubePositions(50);	// 50 cubes are the maximum limit
-	static std::vector<float[3]> cubeScales(50);
-	for (int i = 0; i < 50; i++)
+	static std::vector<float[3]> cubePositions(MAX_numCubes);	// 50 cubes are the maximum limit
+	static std::vector<float[3]> cubeScales(MAX_numCubes);
+	for (int i = 0; i < MAX_numCubes; i++)
 		for (int j = 0; j < 3; j++) 
 			cubeScales[i][j] = 1.0f;
-	static std::vector<float[3]> cubeRotations(50);
-	static std::vector<float[3]> cubeColors(50);
-	for (int i = 0; i < 50; i++)
+	static std::vector<float[3]> cubeRotations(MAX_numCubes);
+	static std::vector<float[3]> cubeColors(MAX_numCubes);
+	for (int i = 0; i < MAX_numCubes; i++)
 		for (int j = 0; j < 3; j++)
 			cubeColors[i][j] = 0.29f;
 
@@ -145,7 +147,7 @@ int main()
 			ImGui::Begin("Hello, User!");                          // Create a window called "Hello, world!" and append into it.
 			// open Dialog Simple
 			if (ImGui::Button("Import Models"))
-				ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".obj,.cpp,.h,.hpp", ".");
+				ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", "3D Model Files (*.obj *.fbx ...){.obj,.stl,.fbx,.dae,.3ds,.iges,.step}", ".");
 
 			// display
 			if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey"))
@@ -157,8 +159,12 @@ int main()
 					std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
 					std::replace(filePathName.begin(), filePathName.end(), '\\', '/');
 
-					models.push_back(Model());
-					models[numModels++].loadModel(filePathName);
+					Model temp = Model();
+					if (temp.loadModel(filePathName))
+					{
+						models.push_back(temp);
+						models[numModels++].loadModel(filePathName);
+					}	
 				}
 
 				// close
@@ -201,19 +207,15 @@ int main()
 			s.insert(0, "--------------- ");
 			s.insert(s.length(), " ---------------");
 			ImGui::Text(s.c_str());
-			ImGui::BeginChild(s.c_str(), ImVec2(300, 200), true);
 
-			s = "Position";
-			s.insert(s.length(), std::to_string(i));
-			ImGui::SliderFloat3(s.c_str(), modelPos[i], -10.0f, 10.0f);
-			if (ImGui::Button(s.c_str()))
+			ImGui::BeginChild(s.c_str(), ImVec2(300, 200), true);
+			ImGui::SliderFloat3("Position", modelPos[i], -10.0f, 10.0f);
+			if (ImGui::Button("Position"))
 				for (int j = 0; j < 3; j++)
 					modelPos[i][j] = 0.0f;
 
-			s = "Scale";
-			s.insert(s.length(), std::to_string(i));
-			ImGui::SliderFloat3(s.c_str(), modelScale[i], -10.0f, 10.0f);
-			if (ImGui::Button(s.c_str()))
+			ImGui::SliderFloat3("Scale", modelScale[i], -10.0f, 10.0f);
+			if (ImGui::Button("Scale"))
 				for (int j = 0; j < 3; j++) {
 					if (i == 0 && (j == 0 || j == 2)) {
 						modelScale[i][j] = 10.0f;
@@ -222,10 +224,8 @@ int main()
 					modelScale[i][j] = 1.0f;
 				}
 
-			s = "Rotate";
-			s.insert(s.length(), std::to_string(i));
-			ImGui::SliderFloat3(s.c_str(), modelRotate[i], 0.0f, 360.0f);
-			if (ImGui::Button(s.c_str()))
+			ImGui::SliderFloat3("Rotate", modelRotate[i], 0.0f, 360.0f);
+			if (ImGui::Button("Rotate"))
 				for (int j = 0; j < 3; j++)
 					modelRotate[i][j] = 0.0f;
 			ImGui::EndChild();
@@ -239,6 +239,7 @@ int main()
 			models[i].Draw(shaderProgram);	// glBindVertexArray(0) called automatically for cleanup
 		}
 		ImGui::End();
+
 
 		cubeShader.use();
 		cubeShader.setUniform("model", glm::mat4(1.0));
@@ -411,7 +412,7 @@ void update(double elapsedTime)
 	// Get the current mouse cursor position delta
 	glfwGetCursorPos(gWindow, &mouseX, &mouseY);
 
-	std::cout << "[" << getMouseRay(mouseX, mouseY).x << ", " << getMouseRay(mouseX, mouseY).y << ", " << getMouseRay(mouseX, mouseY).z << "]\n";
+	//std::cout << "[" << getMouseRay(mouseX, mouseY).x << ", " << getMouseRay(mouseX, mouseY).y << ", " << getMouseRay(mouseX, mouseY).z << "]\n";
 
 	if (glfwGetMouseButton(gWindow, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
 	{	
