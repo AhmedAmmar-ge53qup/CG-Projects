@@ -20,7 +20,13 @@ void Model::loadModel(string path)
 		return;
 	}
 	directory = path.substr(0, path.find_last_of('/'));
+	fileName = path.substr(path.find_last_of('/')+1, path.length());
 	processNode(scene->mRootNode, scene);
+}
+
+std::string Model::getFileName()
+{
+	return fileName;
 }
 
 void Model::processNode(aiNode* node, const aiScene* scene)

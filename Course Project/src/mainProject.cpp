@@ -85,26 +85,23 @@ int main()
 	// Loading the models
 	const int numModels = 4;
 	Model models[numModels];
-	models[0].loadModel("res/models/cylinder.obj");
+	models[0].loadModel("res/models/floor.obj");
 	models[1].loadModel("res/models/woodcrate.obj");
 	models[2].loadModel("res/models/backpack/backpack.obj");
-	models[3].loadModel("res/models/floor.obj");
+	models[3].loadModel("res/models/cylinder.obj");
 
-	// Model positions
-	glm::vec3 modelPos[] = {
-		glm::vec3(-2.5f,1.4f, 0.0f),	// cylinder
-		glm::vec3(2.5f, 1.0f, 0.0f),	// crate
-		glm::vec3(0.0f, 4.0f, 0.0f),	// backpack
-		glm::vec3(0.0f, 0.0f, 0.0f)		// floor
-	};
-
-	// Model scale
-	glm::vec3 modelScale[] = {
-		glm::vec3(0.7f, 0.7f, 0.7f),	// cylinder
-		glm::vec3(1.0f, 1.0f, 1.0f),	// crate
-		glm::vec3(1.0f, 1.0f, 1.0f),	// backpack
-		glm::vec3(10.0f, 1.0f, 10.0f)	// floor
-	};
+	static std::vector<float[3]> modelPos(50);
+	static std::vector<float[3]> modelScale(50);
+	for (int i = 0; i < 50; i++)
+		for (int j = 0; j < 3; j++)
+		{
+			if (i == 0 && (j == 0 || j == 2)) {
+				modelScale[i][j] = 10.0f;
+				continue;
+			}
+			modelScale[i][j] = 1.0f;
+		}
+	static std::vector<float[3]> modelRotate(50);
 
 	//-------------------------------------------------------------- THE CUBES -----------------------------------------------------------------
 	// Loading the Cubes
@@ -200,11 +197,33 @@ int main()
 
 		for (int i = 0; i < numModels; i++)
 		{
-			model = glm::translate(glm::mat4(1.0), modelPos[i]) * glm::scale(glm::mat4(1.0), modelScale[i]);
-			if (i == 2)
-				model = glm::translate(model, glm::vec3(0.0f, 0.0f, 2.0f));
-			shaderProgram.setUniform("model", model);
+			ImGui::Begin(models[i].getFileName().c_str());
+			ImGui::SliderFloat3("Position", modelPos[i], -10.0f, 10.0f);
+			if (ImGui::Button("Position"))
+				for (int j = 0; j < 3; j++)
+					modelPos[i][j] = 0.0f;
 
+			ImGui::SliderFloat3("Scale", modelScale[i], -10.0f, 10.0f);
+			if (ImGui::Button("Scale"))
+				for (int j = 0; j < 3; j++)
+					if (i == 0) {
+						modelScale[i][0] = 10.0f;
+						modelScale[i][1] = 0.0f;
+						modelScale[i][2] = 10.0f;
+					}
+
+			ImGui::SliderFloat3("Rotate", modelRotate[i], 0.0f, 360.0f);
+			if (ImGui::Button("Rotate"))
+				for (int j = 0; j < 3; j++)
+					modelRotate[i][j] = 0.0f;
+			ImGui::End();
+
+			model = glm::translate(glm::mat4(1.0), glm::vec3(modelPos[i][0], modelPos[i][1], modelPos[i][2]));
+			model = glm::scale(model, glm::vec3(modelScale[i][0], modelScale[i][1], modelScale[i][2]));
+			model = glm::rotate(model, glm::radians(modelRotate[i][0]), glm::vec3(1.0f, 0.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(modelRotate[i][1]), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::rotate(model, glm::radians(modelRotate[i][2]), glm::vec3(0.0f, 0.0f, 1.0f));
+			shaderProgram.setUniform("model", model);
 			models[i].Draw(shaderProgram);	// glBindVertexArray(0) called automatically for cleanup
 		}
 
@@ -237,9 +256,9 @@ int main()
 			cubeShader.setUniform("color", glm::vec3(cubeColors[i][0], cubeColors[i][1], cubeColors[i][2]));
 			cubes[i].model = glm::translate(glm::mat4(1.0f), glm::vec3(cubePositions[i][0], cubePositions[i][1], cubePositions[i][2]));
 			cubes[i].model = glm::scale(cubes[i].model, glm::vec3(cubeScales[i][0], cubeScales[i][1], cubeScales[i][2]));
-			cubes[i].model = glm::rotate(cubes[i].model, glm::radians((float)cubeRotations[i][0]), glm::vec3(1.0f, 0.0f, 0.0f));
-			cubes[i].model = glm::rotate(cubes[i].model, glm::radians((float)cubeRotations[i][1]), glm::vec3(0.0f, 1.0f, 0.0f));
-			cubes[i].model = glm::rotate(cubes[i].model, glm::radians((float)cubeRotations[i][2]), glm::vec3(0.0f, 0.0f, 1.0f));
+			cubes[i].model = glm::rotate(cubes[i].model, glm::radians(cubeRotations[i][0]), glm::vec3(1.0f, 0.0f, 0.0f));
+			cubes[i].model = glm::rotate(cubes[i].model, glm::radians(cubeRotations[i][1]), glm::vec3(0.0f, 1.0f, 0.0f));
+			cubes[i].model = glm::rotate(cubes[i].model, glm::radians(cubeRotations[i][2]), glm::vec3(0.0f, 0.0f, 1.0f));
 			cubes[i].Draw(cubeShader);
 		}
 
