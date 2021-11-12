@@ -84,12 +84,9 @@ int main()
 	cubeShader.loadShaders("res/shaders/cube.vert", "res/shaders/cube.frag");
 
 	// Loading the models
-	static int numModels = 4;
-	std::vector<Model> models(4);
-	models[0].loadModel("res/models/floor.obj");
-	models[1].loadModel("res/models/woodcrate.obj");
-	models[2].loadModel("res/models/backpack/backpack.obj");
-	models[3].loadModel("res/models/cylinder.obj");
+	static int numModels = 1;
+	std::vector<Model> models(1);
+	models[0].loadModel("res/models/floor.obj");;
 
 	static std::vector<float[3]> modelPos(50);
 	static std::vector<float[3]> modelScale(50);
@@ -125,11 +122,6 @@ int main()
 	ImGui_ImplOpenGL3_Init("#version 330");
 	ImGui::StyleColorsDark();
 
-	// ImGui window variables
-	bool show_demo_window = true;
-	bool show_another_window = false;
-	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
 
 	double lastTime = glfwGetTime();
 	float cubeAngle = 0.0f;
@@ -150,18 +142,9 @@ int main()
 		ImGui::NewFrame();
 		// Render ImGui Window
 		{
-			static float f = 0.0f;
-			static int counter = 0;
-		
-
-			ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-			ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-			ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-			ImGui::Checkbox("Another Window", &show_another_window);
-
+			ImGui::Begin("Hello, User!");                          // Create a window called "Hello, world!" and append into it.
 			// open Dialog Simple
-			if (ImGui::Button("Open File Dialog"))
+			if (ImGui::Button("Import Models"))
 				ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".obj,.cpp,.h,.hpp", ".");
 
 			// display
@@ -182,12 +165,7 @@ int main()
 				ImGuiFileDialog::Instance()->Close();
 			}
 
-			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-			ImGui::SliderFloat3("cube1", cubePositions[0], -1.0f, 1.0f);            // Edit 3 float using a slider from -1.0f to 1.0f
-			ImGui::SliderFloat3("cube2", cubePositions[1], -1.0f, 1.0f);            // Edit 3 float using a slider from -1.0f to 1.0f
-			ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+			if (ImGui::Button("Add Cubes"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
 			{
 				numCubes++;
 				cubes.push_back(Cube());	// Add a new cube
@@ -195,8 +173,6 @@ int main()
 				
 			ImGui::SameLine();
 			ImGui::Text("counter = %d", numCubes);
-
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
 		}
 
@@ -225,6 +201,7 @@ int main()
 			s.insert(0, "--------------- ");
 			s.insert(s.length(), " ---------------");
 			ImGui::Text(s.c_str());
+			ImGui::BeginChild(s.c_str(), ImVec2(300, 200), true);
 
 			s = "Position";
 			s.insert(s.length(), std::to_string(i));
@@ -251,6 +228,7 @@ int main()
 			if (ImGui::Button(s.c_str()))
 				for (int j = 0; j < 3; j++)
 					modelRotate[i][j] = 0.0f;
+			ImGui::EndChild();
 
 			model = glm::translate(glm::mat4(1.0), glm::vec3(modelPos[i][0], modelPos[i][1], modelPos[i][2]));
 			model = glm::rotate(model, glm::radians(modelRotate[i][0]), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -267,9 +245,13 @@ int main()
 		cubeShader.setUniform("view", view);
 		cubeShader.setUniform("projection", projection);
 
+		ImGui::Begin("Cube Primitves");
 		for (int i = 0; i < numCubes; i++) {
 			std::string s = "Cube " + std::to_string(i + 1);
-			ImGui::Begin(s.c_str());
+			s.insert(0, "--------------- ");
+			s.insert(s.length(), " ---------------");
+			ImGui::Text(s.c_str());
+			ImGui::BeginChild(s.c_str(), ImVec2(300, 200), true);
 			ImGui::SliderFloat3("Position", cubePositions[i], -10.0f, 10.0f);
 			if (ImGui::Button("Position"))
 				for (int j = 0; j < 3; j++)
@@ -286,16 +268,17 @@ int main()
 					cubeRotations[i][j] = 0.0f;
 
 			ImGui::ColorEdit3("Color", cubeColors[i]); // Edit 3 floats representing a color
-			ImGui::End();
+			ImGui::EndChild();
 
 			cubeShader.setUniform("color", glm::vec3(cubeColors[i][0], cubeColors[i][1], cubeColors[i][2]));
 			cubes[i].model = glm::translate(glm::mat4(1.0f), glm::vec3(cubePositions[i][0], cubePositions[i][1], cubePositions[i][2]));
-			cubes[i].model = glm::scale(cubes[i].model, glm::vec3(cubeScales[i][0], cubeScales[i][1], cubeScales[i][2]));
 			cubes[i].model = glm::rotate(cubes[i].model, glm::radians(cubeRotations[i][0]), glm::vec3(1.0f, 0.0f, 0.0f));
 			cubes[i].model = glm::rotate(cubes[i].model, glm::radians(cubeRotations[i][1]), glm::vec3(0.0f, 1.0f, 0.0f));
 			cubes[i].model = glm::rotate(cubes[i].model, glm::radians(cubeRotations[i][2]), glm::vec3(0.0f, 0.0f, 1.0f));
+			cubes[i].model = glm::scale(cubes[i].model, glm::vec3(cubeScales[i][0], cubeScales[i][1], cubeScales[i][2]));
 			cubes[i].Draw(cubeShader);
 		}
+		ImGui::End();
 
 		// Rendering ImGui
 		ImGui::Render();
