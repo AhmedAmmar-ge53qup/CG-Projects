@@ -24,7 +24,7 @@
 
 
 // Global Variables
-const char* APP_TITLE = "CG HW4 Ahmed A. Ammar";
+const char* APP_TITLE = "CG Project - Ahmed A. Ammar";
 int gWindowWidth = 1200;
 int gWindowHeight = 900;
 GLFWwindow* gWindow = NULL;
