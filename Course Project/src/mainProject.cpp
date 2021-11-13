@@ -260,6 +260,17 @@ int main()
 			if (ImGui::Button("Rotate"))
 				for (int j = 0; j < 3; j++)
 					modelRotate[i][j] = 0.0f;
+	
+			if (i != 0) {
+				ImGui::Text("               ");
+				ImGui::SameLine();
+				if (ImGui::Button("Remove")) {
+					models.erase(models.begin() + i);
+					numModels--;
+				}
+			}
+			ImGui::SameLine();
+			ImGui::Text("               ");
 			ImGui::EndChild();
 
 			model = glm::translate(glm::mat4(1.0), glm::vec3(modelPos[i][0], modelPos[i][1], modelPos[i][2]));
@@ -301,6 +312,16 @@ int main()
 					cubeRotations[i][j] = 0.0f;
 
 			ImGui::ColorEdit3("Color", cubeColors[i]); // Edit 3 floats representing a color
+
+			ImGui::Text("               ");
+			ImGui::SameLine();
+			if (ImGui::Button("Remove")) {
+				cubes.erase(cubes.begin() + i);
+				numCubes--;
+			}
+			ImGui::SameLine();
+			ImGui::Text("               ");
+
 			ImGui::EndChild();
 
 			cubeShader.setUniform("color", glm::vec3(cubeColors[i][0], cubeColors[i][1], cubeColors[i][2]));
