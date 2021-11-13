@@ -12,13 +12,13 @@ void Cube::Draw(ShaderProgram& shaderProgram)
 {
 	glBindVertexArray(VAO);
 	shaderProgram.use();
-	texture.bind(1);
-	glUniform1i(glGetUniformLocation(shaderProgram.getProgram(), "texSampler"), 1);
+	//texture.bind(1);
+	//glUniform1i(glGetUniformLocation(shaderProgram.getProgram(), "texSampler"), 1);
 	glUniform1i(glGetUniformLocation(shaderProgram.getProgram(), "isTextured"), false);
 	shaderProgram.setUniform("model", model);
 	glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(GLuint));
 
-	glBindTexture(GL_TEXTURE1, 0);
+	//glBindTexture(GL_TEXTURE1, 0);
 	glBindVertexArray(0);	// Cleanup
 }
 
@@ -36,8 +36,8 @@ void Cube::setupCube() {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));	// Texture Coordinates
 	glEnableVertexAttribArray(2);
 
-	std::string texPath = "res/images/stone.jpg";
-	texture.loadTexture(texPath, true);
+	//std::string texPath = "res/images/stone.jpg";
+	//texture.loadTexture(texPath, true);
 
 	glBindVertexArray(0);	// Cleanup
 }

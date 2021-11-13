@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <array>
 #define GLEW_STATIC
 #include "GL/glew.h"	// Important - this header must come before glfw3 header
 #include "GLFW/glfw3.h"
@@ -87,12 +88,11 @@ int main()
 
 	// Loading the models
 	static int numModels = 1;
-	int MAX_numModels = 100;
 	std::vector<Model> models(1);
 	models[0].loadModel("res/models/floor.obj");
-	static std::vector<float[3]> modelPos(MAX_numModels);
-	static std::vector<float[3]> modelScale(MAX_numModels);
-	for (int i = 0; i < MAX_numModels; i++)
+	static std::vector<std::array<float, 3>> modelPos(numModels);
+	static std::vector<std::array<float, 3>> modelScale(numModels);
+	for (int i = 0; i < numModels; i++)
 		for (int j = 0; j < 3; j++)
 		{
 			if (i == 0 && (j == 0 || j == 2)) {
@@ -102,7 +102,7 @@ int main()
 			}
 			modelScale[i][j] = 1.0f;
 		}
-	static std::vector<float[3]> modelRotate(MAX_numModels);
+	static std::vector<std::array<float, 3>> modelRotate(numModels);
 
 	// Load the Light
 	Model lightMesh;
@@ -111,16 +111,15 @@ int main()
 
 	// Loading the Cubes
 	static int numCubes = 1;			// Must start with at least 1 cube on screen
-	int MAX_numCubes = 100;
 	std::vector<Cube> cubes(1);	// Constructor Gets Called here automatically
-	static std::vector<float[3]> cubePositions(MAX_numCubes);	// 50 cubes are the maximum limit
-	static std::vector<float[3]> cubeScales(MAX_numCubes);
-	for (int i = 0; i < MAX_numCubes; i++)
+	static std::vector<std::array<float, 3>> cubePositions(numCubes);	// 50 cubes are the maximum limit
+	static std::vector<std::array<float, 3>> cubeScales(numCubes);
+	for (int i = 0; i < numCubes; i++)
 		for (int j = 0; j < 3; j++) 
 			cubeScales[i][j] = 1.0f;
-	static std::vector<float[3]> cubeRotations(MAX_numCubes);
-	static std::vector<float[3]> cubeColors(MAX_numCubes);
-	for (int i = 0; i < MAX_numCubes; i++)
+	static std::vector<std::array<float, 3>> cubeRotations(numCubes);
+	static std::vector<std::array<float, 3>> cubeColors(numCubes);
+	for (int i = 0; i < numCubes; i++)
 		for (int j = 0; j < 3; j++)
 			cubeColors[i][j] = 0.29f;
 
@@ -148,7 +147,7 @@ int main()
 		ImGui::NewFrame();
 		// Render ImGui Window
 		{
-			ImGui::Begin("Hello, User!");                          // Create a window called "Hello, world!" and append into it.
+			ImGui::Begin("Hello, User!");                          // Create a window called "Hello, User!" and append into it.
 			// open Dialog Simple
 			if (ImGui::Button("Import Models"))
 				ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", "3D Model Files (*.obj *.fbx ...){.obj,.stl,.fbx,.dae,.3ds,.iges,.step}", ".");
@@ -167,6 +166,9 @@ int main()
 					if (temp.loadModel(filePathName))
 					{
 						models.push_back(temp);
+						modelPos.push_back({0.0f, 0.0f, 0.0f});
+						modelScale.push_back({1.0f, 1.0f, 1.0f});
+						modelRotate.push_back({0.0f, 0.0f, 0.0f});
 						models[numModels++].loadModel(filePathName);
 					}	
 				}
@@ -177,8 +179,12 @@ int main()
 
 			if (ImGui::Button("Add Cubes"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
 			{
-				numCubes++;
 				cubes.push_back(Cube());	// Add a new cube
+				cubePositions.push_back({ 0.0f, 0.0f, 0.0f });
+				cubeScales.push_back({ 1.0f, 1.0f, 1.0f });
+				cubeRotations.push_back({ 0.0f, 0.0f, 0.0f });
+				cubeColors.push_back({ 0.29f, 0.29f, 0.29f });
+				numCubes++;
 			}
 				
 			ImGui::SameLine();
@@ -243,12 +249,12 @@ int main()
 			ImGui::Text(s.c_str());
 
 			ImGui::BeginChild(s.c_str(), ImVec2(300, 200), true);
-			ImGui::SliderFloat3("Position", modelPos[i], -10.0f, 10.0f);
+			ImGui::SliderFloat3("Position", modelPos[i].data(), -10.0f, 10.0f);
 			if (ImGui::Button("Position"))
 				for (int j = 0; j < 3; j++)
 					modelPos[i][j] = 0.0f;
 
-			ImGui::SliderFloat3("Scale", modelScale[i], -10.0f, 10.0f);
+			ImGui::SliderFloat3("Scale", modelScale[i].data(), -10.0f, 10.0f);
 			if (ImGui::Button("Scale"))
 				for (int j = 0; j < 3; j++) {
 					if (i == 0 && (j == 0 || j == 2)) {
@@ -258,7 +264,7 @@ int main()
 					modelScale[i][j] = 1.0f;
 				}
 
-			ImGui::SliderFloat3("Rotate", modelRotate[i], 0.0f, 360.0f);
+			ImGui::SliderFloat3("Rotate", modelRotate[i].data(), 0.0f, 360.0f);
 			if (ImGui::Button("Rotate"))
 				for (int j = 0; j < 3; j++)
 					modelRotate[i][j] = 0.0f;
@@ -268,6 +274,9 @@ int main()
 				ImGui::SameLine();
 				if (ImGui::Button("Remove")) {
 					models.erase(models.begin() + i);
+					modelPos.erase(modelPos.begin() + i);
+					modelScale.erase(modelScale.begin() + i);
+					modelRotate.erase(modelRotate.begin() + i);
 					numModels--;
 				}
 			}
@@ -298,26 +307,30 @@ int main()
 			s.insert(s.length(), " ---------------");
 			ImGui::Text(s.c_str());
 			ImGui::BeginChild(s.c_str(), ImVec2(300, 200), true);
-			ImGui::SliderFloat3("Position", cubePositions[i], -10.0f, 10.0f);
+			ImGui::SliderFloat3("Position", cubePositions[i].data(), -10.0f, 10.0f);
 			if (ImGui::Button("Position"))
 				for (int j = 0; j < 3; j++)
 					cubePositions[i][j] = 0.0f;
 
-			ImGui::SliderFloat3("Scale", cubeScales[i], -10.0f, 10.0f);
+			ImGui::SliderFloat3("Scale", cubeScales[i].data(), -10.0f, 10.0f);
 			if (ImGui::Button("Scale"))
 				for (int j = 0; j < 3; j++)
 					cubeScales[i][j] = 1.0f;
 
-			ImGui::SliderFloat3("Rotate", cubeRotations[i], 0.0f, 360.0f);
+			ImGui::SliderFloat3("Rotate", cubeRotations[i].data(), 0.0f, 360.0f);
 			if (ImGui::Button("Rotate"))
 				for (int j = 0; j < 3; j++)
 					cubeRotations[i][j] = 0.0f;
 
-			ImGui::ColorEdit3("Color", cubeColors[i]); // Edit 3 floats representing a color
+			ImGui::ColorEdit3("Color", cubeColors[i].data()); // Edit 3 floats representing a color
 			ImGui::Text("               ");
 			ImGui::SameLine();
 			if (ImGui::Button("Remove")) {
 				cubes.erase(cubes.begin() + i);
+				cubePositions.erase(cubePositions.begin() + i);
+				cubeScales.erase(cubeScales.begin() + i);
+				cubeRotations.erase(cubeRotations.begin() + i);
+				cubeColors.erase(cubeColors.begin() + i);
 				numCubes--;
 			}
 			ImGui::SameLine();
