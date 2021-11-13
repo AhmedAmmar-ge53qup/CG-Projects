@@ -69,6 +69,12 @@
     <ClCompile Include="src\imgui\ImGuiFileDialog.cpp">
       <Filter>Source Files\Imgui</Filter>
     </ClCompile>
+    <ClCompile Include="src\GLTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stbi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ShaderProgram.h">
@@ -121,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="src\imgui\dirent\dirent.h">
       <Filter>Header Files\Imgui\dirent</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GLTexture.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

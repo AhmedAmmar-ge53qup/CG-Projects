@@ -1,5 +1,4 @@
 #include "Model.h"
-#define STB_IMAGE_IMPLEMENTATION  // Required by the library
 #include "stb_image/stb_image.h"
 
 

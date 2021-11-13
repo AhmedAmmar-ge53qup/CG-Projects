@@ -33,6 +33,8 @@
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />
+    <ClCompile Include="src\GLTexture.cpp" />
+    <ClCompile Include="src\stbi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Cube.h" />
@@ -52,6 +54,7 @@
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\ShaderProgram.h" />
+    <ClInclude Include="src\GLTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\cube.frag" />

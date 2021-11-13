@@ -21,6 +21,7 @@
 #include "Model.h"
 #include "Cube.h"
 
+
 // Global Variables
 const char* APP_TITLE = "CG HW4 Ahmed A. Ammar";
 int gWindowWidth = 1200;
@@ -129,7 +130,6 @@ int main()
 	ImGui_ImplOpenGL3_Init("#version 330");
 	ImGui::StyleColorsDark();
 
-
 	double lastTime = glfwGetTime();
 	while (!glfwWindowShouldClose(gWindow))
 	{
@@ -237,6 +237,8 @@ int main()
 		{
 			std::string s = models[i].getFileName();
 			s.insert(0, "--------------- ");
+			s.insert(s.length(), " ");
+			s.insert(s.length(), to_string(i));
 			s.insert(s.length(), " ---------------");
 			ImGui::Text(s.c_str());
 
@@ -312,7 +314,6 @@ int main()
 					cubeRotations[i][j] = 0.0f;
 
 			ImGui::ColorEdit3("Color", cubeColors[i]); // Edit 3 floats representing a color
-
 			ImGui::Text("               ");
 			ImGui::SameLine();
 			if (ImGui::Button("Remove")) {

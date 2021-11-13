@@ -2,12 +2,16 @@
 
 in vec3 Normal;
 in vec3 FragPos;
+in vec2 TexCoord;
 
 // For Light
 uniform vec3 lightColor;
 uniform vec3 lightPos;
 uniform vec3 viewPos;
 uniform vec3 color;
+
+uniform sampler2D texSampler;
+uniform bool isTextured = false;
 
 out vec4 fragColor;
 void main()
@@ -30,6 +34,11 @@ void main()
 	float NDotH = max(dot(normal, halfDir), 0.0f);
 	vec3 specular = lightColor * specularFactor * pow(NDotH, shininess);
 
+	vec4 texel = texture(texSampler, TexCoord);
 	vec3 result = (ambient + diffuse + specular) * color;
-	fragColor = vec4(result, 1.0);
+
+	if (isTextured)
+		fragColor = vec4((ambient + diffuse + specular), 1.0) * texel;
+	else
+		fragColor = vec4(result, 1.0);
 }
