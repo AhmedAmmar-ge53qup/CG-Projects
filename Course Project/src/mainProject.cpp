@@ -252,7 +252,15 @@ int main()
 			ImGui::SliderFloat3("Position", modelPos[i].data(), -10.0f, 10.0f);
 			if (ImGui::Button("Position"))
 				for (int j = 0; j < 3; j++)
+				{
+					if (i == 0 && j == 1)
+					{
+						modelPos[i][j] = -1;
+						continue;
+					}	
 					modelPos[i][j] = 0.0f;
+				}
+					
 
 			ImGui::SliderFloat3("Scale", modelScale[i].data(), -10.0f, 10.0f);
 			if (ImGui::Button("Scale"))
